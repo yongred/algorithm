@@ -1,0 +1,31 @@
+Resume:
+
+Front End Web Developer
+Future Intedu Center Inc.
+Skills & Tools: Nodejs, Express.js, JavaScript/jQuery, Html, CSS, npm, Jade, Less.js, Grunt.js, Bootstrap, git
+• Designed and developed responsive UI/UX designs using Jade template, CSS, Less.js, and Bootstrap
+• Reduced 60 percent of duplicated CSS codes, by rewrite them using CSS pre• processor Less.js.
+• Used git for version control.
+• Managed JSON datas for saving in the database, and display to the users.
+• Used JavaScript/jQuery to manipulate HTML DOM objects.
+
+WordPress Web Developer
+Innovative Web Services Inc.
+Skills & Tools: WordPress, PHP, MySQL, Html5, CSS3, Gettext, JavaScript/jQuery, Sass/SCSS, Gulp.js, git
+• Utilized Trellis, Bedrock, and Sage starter theme to develop a custom WordPress theme for the company's official website.
+• Completed Search Engine Optimization (SEO) for the websites that raised the grades from 50 to 100 on Google PageSpeed Insights, and raised the google keyword search ranking to the first page.
+• Debugged malfunction codes from the previous developers.
+• Developed UI and functionalities of the websites requested from the clients.
+• Used Gettext internationalization system to implement the websites in multiple languages.
+• Implemented creative effects using HTML5, CSS3, and JavaScript.
+
+PHP Web Developer
+New York Mart Group Inc.
+Skills & Tools: Magento, WordPress, PHP, MySQL, JavaScript/jQeury, AJAX, git, Html5, CSS3, Sass
+• Designed and developed RESTful style web services using PHP.
+• Implemented new Models to the existing Magento Websites.
+• Used Sage starter theme to develop a custom WordPress theme for the website.
+• Developed a custom WordPress plugin to override existing login and sign up forms.
+• Used WordPress built in functions like a PHP framework to build websites from scratch.
+• Utilized PHP and MySQL query for CRUD database operations.
+• Programmed interactive AJAX interfaces with AJAX libraries.

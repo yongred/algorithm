@@ -1,0 +1,50 @@
+/**
+big O notation notes
+*/
+
+Big Theta notation: asymptotic tight bound:
+
+- theta( g(n) ) = { f(n): there exist positive constants c1, c2, and n0 such that 0 <= c1*g(n) <= f(n) <= c2*g(n) for all n >= n0 }.
+
+-A function f(n) belongs to the set theta( g(n) ), if there exist positive constants c1 and c2 such that it can be “sandwiched” between c1*g(n) and c2*g(n), for sufficiently large n. 
+
+-ex: c1*n^2 <= (1/2)n^2 - 3n <= c2*n^2
+	 c1 <= (1/2) - 3/n <= c2;  (1/2) - 3/n > 0, n >= 7; 1/2 - 3/7 = 1/14;
+	 c1 = 1/14; c2 = 1/2, since n is positive, 1/2 - 3/n < 1/2;
+
+[ f(n) = theta(g(n)) ]
+
+-----------
+
+Big O notation: asymptotic Upper bound:
+
+- O( g(n) ) = { f(n): there exist positive constants c and n0 such that
+0 <= f(n) <= cg(n) for all n >= n0 }.
+
+-g(n) is the limit of f(n), at worst it will run g(n).
+
+-When we say “the running time is O(n^2),” we mean that there is a
+function f(n) that is O(n^2) such that for any value of n, no matter what particular input of size n is chosen, the running time on that input is bounded from above by the value f(n). 
+Equivalently, we mean that the worst-case running time is O(n^2).
+
+[ f(n) = O(g(n)) ]
+
+-----------
+
+Big Omega notation: asymptotic Lower bound:
+
+- Omega( g(n) ) = { f(n): there exist positive constants c and n0 such that
+0 <= cg(n) <= f(n), for all n >= n0 }.
+
+-best case if g(n)
+
+Theorem 3.1
+For any two functions f(n) and g(n), we have f(n) = theta(g(n)) if and only if
+f(n) = O( g(n) ) and f(n) = Omega( g(n) ).
+
+
+
+
+
+
+

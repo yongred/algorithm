@@ -1,0 +1,77 @@
+
+1. What is a hash function and what are some structure/strategies for implementing them?
+
+-Hash function is mathematical function or a process, which transform a huge, possibly
+variable-sized amount of data into a small, usually fixed-sized.
+
+-Hashing is a procedure that is used in sorting and retrieving the information about the
+database. 
+-Hashing is a good technique for implementation in keyed tables.
+-hashing the transformation of a string of characters into a frequently shorter fixedlength
+value or key that represents the original string is done.
+
+* Division Method
+	-an integer key is divided by the table size and the remainder is taken as the hash value.
+	103 % 10(size of table) = 3;  table: 0-9; inserted to address 3;  ex: "Cat" = ASCII 13110;
+	13110 % 10 = 0; 'Cat' inserted to address 0;
+
+* Multiplication Method
+	-Multiply all the digits in the key, and then mod(%) the table size; get the reminder.
+	ex: 'Cat' = 131130; (1 * 3 * 1 * 1 * 3 * 0) % 10 = 0; address 0;
+
+* Folding Method
+	-breaks up key into segaments, add them up, then mod(%) by table size; 3 segments;
+	ex: 123456789; a=123, b=456, c=789; (123 + 456 + 789) % 3 = 1368 % 10 = 8; 
+		address 8;
+
+Hashing strategies:
+	- Universal Hashing, Hashing with Polynomials,  Cascade Hashing, Geometric Hashing;
+
+Problems:
+	-collision: 2 diff inputs, results in same output;
+
+
+2. What is a garbage collection? (bonus points for relating it to Java and C#)
+
+-In java, garbage means unreferenced objects.
+Garbage Collection is process of reclaiming the runtime unused memory automatically. In other words, it is a way to destroy the unused objects.
+in java it is performed automatically
+
+3. What do you know about data structures and working with them?
+
+-In computer science, a data structure is a particular way of organizing data in a computer so that it can be used efficiently.
+-the most common used datastructure is an array. which you access by integer indexes. and usually fixed size;
+-there is LinkedList: it connects to the adjacent nodes, and can efficiently perform insertion and deletion, without going through the rest of the list.
+-hashtable: effecient for implementing things like a dictionary. Mapping keys to the value. effecient to look up large amount of datas, using fixed amount of keys in the table. 
+-choose to optimize the runtime, and space.
+
+
+ListenFirst Media:
+* What they do: 
+	-Data Analysis; collecting datas from social media and analysize them into informations that 
+	shows the client how their brand is doing in relation to this field. 
+ 	-optimizing and predicting business outcomes.
+ 	-integrate and analyze our comprehensive social data the brand’s digital and offline data;
+ 		things like owned, earned, paid and organic social data combined with your sales figures, CRM, email, display media, and more.
+ 	-predict performance, coming up with solutions to improve.
+
+ 	-social and digital data have enormous power to help brands predict and optimize for critical business outcomes.
+ 	-solve problems by unlocking the power behind data
+
+ 	-ListenFirst is a data and analytics company that aggregates data streams from a wide range of sources – including sales figures, customer engagement, research & tracking, media impact, and social media platforms – to let brands know how they stack up against each other, glean insights into what’s working, and ultimately optimize business performance.
+
+*History:
+	-started out doing data analytics for companies in the entertainment industry. However, they have since expanded to do work with non-profits, as well as companies in the pharma, financial, medical, political, and gaming industries.
+
+*Founded
+-2012
+
+*Founders
+-CHRISTIAN ANTHONY
+-JASON KLEIN
+
+*Industry
+-Marketing and Advertising
+
+*Company Size
+51-200 employees
