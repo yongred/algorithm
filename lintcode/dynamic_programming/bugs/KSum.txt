@@ -1,0 +1,31 @@
+Bug 1: remember the type for returning
+
+int kSum(int[] A, int k, int target) {
+  if (A == null || A.length < k || k <= 0) {
+    ---del
+    	return null
+    ---add
+      return 0;
+    ---
+	}
+
+bug 2: don't forget we recording 1->n; 0 based -1;
+--del
+if (A[tInd] <= target) {
+--add
+if (A[tInd - 1] <= target) {
+---
+
+bug 3: same 1->n; 0 based; <=
+--del
+for (int nInd = 1; nInd < A.length; nInd++) {
+--add
+for (int nInd = 1; nInd <= A.length; nInd++) {
+--
+
+bug 4: we are filling target indexes.
+--del
+if (A[nInd - 1] <= target) {
+--add
+if (A[tInd - 1] <= target) {
+--

@@ -1,0 +1,106 @@
+Stack Solution bugs:
+
+bug 1: void return.
+
+public void reorderList(ListNode head) {
+  if (head == null) {
+----del
+  return head;
+----
+
+----add
+	return;
+----
+}
+
+
+bug 2: mid divide.
+--del
+ListNode slow.next = null
+--
+
+--add
+ListNode mid = slow;
+--
+// slow in the mid
+while (slow.next != null) {
+  stack.push(slow.next);
+  slow = slow.next;
+}
+--add
+// divide into 2 lists, then connect
+mid.next = null;
+--
+
+bug 3: fast node.
+--del
+ListNode fast = head;
+--
+
+--add
+ListNode fast = head.next;
+--
+
+--del
+while (fast != null)
+--del
+
+--add
+while (fast != null && fast.next != null) {
+--
+  slow = slow.next;
+--del
+	fast = (fast.next == null) ? fast.next : fast.next.next; 
+--add
+  fast = fast.next.next;
+--
+}
+
+bug 4: forget slow iterates
+
+while (slow.next != null) {
+  stack.push(slow.next);
+--add
+  slow = slow.next;
+--
+}
+
+bug 5: iterate wrong next
+while (cur != null && !stack.isEmpty()) {
+  ListNode newNext = stack.pop();
+  ListNode curNext = cur.next;
+  cur.next = newNext;
+  newNext.next = curNext;
+--del
+  cur = newNext;
+--
+--add
+  cur = curNext;
+--
+}
+
+
+------------
+Reverse solution bugs:
+
+bug 1: forget about term switch
+
+while (head1 != null && head2 != null) {
+  if (term1) {
+    ListNode oldNext1 = head1.next;
+    head1.next = head2;
+    // iterates
+    head1 = oldNext1;
+  } else {
+    ListNode oldNext2 = head2.next;
+    head2.next = head1;
+    head2 = oldNext2;
+  }
+ ---add
+  term1 = !term1;
+ ---
+}
+
+bug 2: reverse needs to return the prev last Node, (new head2);
+
+ListNode head2 = reverse(mid.next);

@@ -1,0 +1,19 @@
+bug 1:
+if (root == null) {
+---delete
+	return null;
+---
+
+--add
+	return 0;
+--
+}
+
+bug 2:
+--delete
+while (!queue.isEmpty)
+--delete
+
+--add
+while (!queue.isEmpty())
+--

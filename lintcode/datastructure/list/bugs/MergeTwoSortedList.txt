@@ -1,0 +1,9 @@
+bug 1: don't forget asc order
+
+while (l1 != null && l2 != null) {
+----del
+	if (l1.val >= l2.val) {
+----
+----add
+  if (l1.val <= l2.val) {
+----

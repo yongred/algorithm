@@ -1,0 +1,8 @@
+Bug 1: Remember to init hashMap vals.
+
+HashMap<Integer, Integer> inPos = new HashMap<>();
+---
+for (int i = 0; i < inorder.length; i++) {
+  inPos.put(inorder[i], i);
+}
+---

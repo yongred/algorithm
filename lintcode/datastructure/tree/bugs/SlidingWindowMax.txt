@@ -1,0 +1,12 @@
+bug 1: j instead of i;
+
+while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) {
+---
+while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[j]) {
+
+
+bug 2: deque.peekFirst() is the index, we need the actual val to return.
+
+res.add(deque.peekFirst());
+--
+res.add(nums[deque.peekFirst()]);

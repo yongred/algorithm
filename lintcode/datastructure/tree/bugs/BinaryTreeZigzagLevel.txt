@@ -1,0 +1,4 @@
+Bug 1:
+//don't push curLevel node to next level.
+TreeNode curNode = curLevel.pop();
+nextLevel.push(curNode);

@@ -1,0 +1,21 @@
+bug 1: when found ans, also need to increment/decrement.
+
+if (sum == target) {
+  List<Integer> list = Arrays.asList(numbers[start - 1], numbers[i],
+      numbers[j]);
+  res.add(list);
+  ---add
+  i++;
+  j--;
+  ---
+
+
+bug 2: start is the 1st elm inclusive, so len - start = size;
+
+--del
+if (numbers.length - 1 - start < 2) {
+--add
+if (numbers.length - start < 2) {
+  return;
+}
+--

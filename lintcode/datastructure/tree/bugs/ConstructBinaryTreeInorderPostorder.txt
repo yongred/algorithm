@@ -1,0 +1,29 @@
+Bug 1:
+
+if (inEnd < inStart) {
+  return null;
+}  
+
+delete----
+// need to decrement poIndex.index first, or else the index will not be correct
+if (inEnd == inStart) {
+  return root;
+}
+----
+
+TreeNode root = new TreeNode(postorder[poIndex.index]);
+int inRoot = inPos.get(root.val);
+poIndex.index--;
+
+add--
+// need to decrement poIndex.index first, or else the index will not be correct
+if (inEnd == inStart) {
+  return root;
+}
+--
+
+Bug 2:
+poIndex is a Class object.
+wrong: --poIndex;
+
+should be: --poIndex.index;
