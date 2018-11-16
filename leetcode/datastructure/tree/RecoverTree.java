@@ -1,4 +1,5 @@
 /**
+99. Recover Tree
 Two elements of a binary search tree (BST) are swapped by mistake.
 
 Recover the tree without changing its structure.
@@ -146,8 +147,8 @@ class RecoverTree {
         }
       }
     }
-    // right last. Prev is the rootNode.
     this.prev = root;
+    // right last. Prev is the rootNode.
     helper(root.right);
   }
   
