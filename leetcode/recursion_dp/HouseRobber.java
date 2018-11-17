@@ -41,6 +41,13 @@ How to Arrive:
 * At last we just need to find the Max between incl lastVal or excl lastVal. dp[n][1], dp[n][0];
 * Time: O(n);
 * Space: O(n);
+
+Solution: DP optimized space;
+How to Arrive:
+* looking at prev Solution, we notice that we just need 2 Vals to carry over and use.
+* We just need **prevInclMax** and **prevExclMax** ; we don't need the whole table.
+* Time: O(n);
+* Space; O(1);
 */
 import java.util.*;
 import java.io.*;
