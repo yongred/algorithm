@@ -83,6 +83,22 @@ How to Arrive:
 			* check prev s val, dp[p][s-1] <- direction.
 * Time: O(p * s);
 * Space: O(p * s);
+
+Solution 2: Using 2 pointers.
+How to Arrive:
+* 'a-z' and '?' are easy to manage, just pass over when == or ?;
+* '* ' is the tricky one we need to think about how to handle.
+	* '* ' matches anything, So the key is whether the chars after '* ' matches.
+	* Ex: there can be s: 'abcdechecd', p: ab * cd; Now there are 3 choices of 'c';
+	* We need to think about check all possibilities for the char after '* ';
+	* for P: 'ab * cd'; we look for 'c' in S: 'abcdechecd'. We check for 1st 'c' if leads to ans, then sec, then all 'c's afterward. 'cdechecd' != 'cd', 'checd' != 'cd', 'cd' == 'cd' found.
+	* So when we found '* ', we need a pointer on char after '* ' in P to compare to S chars. In this case 'c', and comparing 'cd' to S.
+	* And also a pointer to traverse 'c' in S. If not workout, come back and go to the next 'c'; Until found an ans or loop out of length.
+* We loop until S is finished traverse, now if it is match, P would also finished traverse, unless there are '* 's at the end of P.
+* So, we also consider the posibility of last char == '* '; Just iter over it. 
+* Now both P and S are finished iteration, We found Match.
+* Time: O(s); eventhough when '* ' we need to traverse different possibility, but it will aways be < s;
+* Space: O(1);
 */
 
 import java.util.*;
@@ -131,6 +147,54 @@ class WildcardMatching {
     }
     System.out.println(Arrays.deepToString(dp));
     return dp[pchars.length][schars.length];
+  }
+
+  /**
+   * Solution 2: use 2 pointers to compare p and s
+   */
+  public boolean isMatch2(String s, String p) {
+    char [] sch = s.toCharArray();
+    char [] pch = p.toCharArray();
+    // p and s pointers to compare
+    int si = 0;
+    int pi = 0;
+    // place keeper for *
+    int starIdx = -1;
+    // find char match after * in S.
+    int match = -1;
+    // matching all sequence chars
+    while (si < sch.length) {
+      // case '?' or 'a-z' ==
+      if (pi < pch.length && (pch[pi] == '?' || pch[pi] == sch[si])) {
+        si++;
+        pi++;
+      } else if (pi < pch.length && pch[pi] == '*') {
+        // case '*', keep pos so we can recompare different possibilities
+        starIdx = pi;
+        // index for finding char right after '*', ex: '*c..' find 'c';
+        match = si;
+        // go to next p char start compare for possibilities
+        pi++;
+      } else if (starIdx != -1) {
+        // going back to where last * is, b/c cur match not work out.
+        // recompare, pi goes back to char right after *
+        pi = starIdx + 1;
+        // iter until finding next match char for char next to '*';
+        match++;
+        // si update so first condition will compare pch[pi] == sch[si].
+        // it will goes back to this condition until find a possible match or next '*' appear.
+        si = match;
+      } else {
+        // pch[pi] != sch[si], pch[pi] != '?', pch[pi] != '*'
+        return false;
+      }
+    }
+    // check if '*' is last char/chars
+    while (pi < pch.length && pch[pi] == '*') {
+      pi++;
+    }
+    // p at the end, means match.
+    return pi == pch.length;
   }
 
   public static void main(String[] args) {
