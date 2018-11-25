@@ -34,7 +34,7 @@ How to Arrive:
 * Time: O(2^n);
 * Space: O(n);
 
-Solution2: memorization. Bottom-up
+Solution2: memorization. Top down
             4
           /   \
         3      2
@@ -48,7 +48,7 @@ How to Arrive:
 * Time: O(n);
 * Space: O(n);
 
-Solution 3: DP Top down;
+Solution 3: DP Bottom up;
 How to arrive:
 * If we know the n-1 and n-2 ways, we can find n ways, by adding them.
 * So, that means we just need 2 variables to store the prev 2 positions.
@@ -62,7 +62,7 @@ How to arrive:
 class ClimbingStairs {
 
   /**
-   * Solution: DP top-down
+   * Solution: DP bottom up
    * Time: O(n);
    * Space: O(1);
    */
@@ -98,7 +98,7 @@ class ClimbingStairs {
   }
 
   /**
-   * Solution: Memorization bottom-up
+   * Solution: Memorization Top down
    * Time: O(n);
    * Space: O(n);
    */
