@@ -66,6 +66,14 @@ How to arrive:
 * Memorize the minCost among all choices. memo[amount]; 
 * return either -1 or minCost.
 * Time: O(n * c);
+	* Analysis: Not cached is c^n; Cached, goes down first time memorized all sub amounts. After that we don't need to go down recurse call again. Just loop the coins. So loop the coins n times = c * n;
+	* ex: amount = 6; coins={1,2,3}; B/c first recurse for c {1}; we already have all sub amounts cached. So other times, just loop the coins and retrieve from cached.
+	6, 4, 3
+	5, 3, 2
+	4, 2, 1
+	3, 1,
+	2, 1
+	1
 * Space: O(n);
 
 */
