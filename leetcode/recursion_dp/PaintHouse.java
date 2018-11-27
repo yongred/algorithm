@@ -1,5 +1,5 @@
 /**
-515. Paint House
+256. Paint House
 There are a row of n houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
 
 The cost of painting each house with a certain color is represented by a n x 3 cost matrix. For example, costs[0][0] is the cost of painting house 0 with color red; costs[1][2] is the cost of painting house 1 with color green, and so on... Find the minimum cost to paint all houses.
@@ -74,8 +74,10 @@ for (int color = 0; color < 3; color++) {
 * Space: O(n);
 
 */
+import java.io.*;
+import java.util.*;
 
-public class PainHouse {
+public class PaintHouse {
 
 	/**
    * @param costs: n x 3 cost matrix
@@ -84,7 +86,7 @@ public class PainHouse {
    * Time: O(n); T(3n);
    * Auxiliary Space: O(1);
    */
-  public int minCost(int[][] costs) {
+  public static int minCost(int[][] costs) {
     int n = costs.length;
     if (n == 0) {
       return 0;
@@ -185,4 +187,8 @@ public class PainHouse {
     return memo.get(houseLevel);
   }
   
+  public static void main(String[] args) {
+  	int[][] costs = {{1,5,6},{14,15,5},{4,3,3},{15,15,9},{9,2,7},{6,5,7},{19,4,4},{6,13,3},{8,16,20},{18,7,9}};
+  	int res = minCost(costs);
+  }
 }
