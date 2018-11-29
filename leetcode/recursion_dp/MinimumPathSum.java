@@ -43,6 +43,17 @@ How to arrive:
 * Time: O(n);
 * Space: O(1);
 
+Solution: Memorization, top-down recursive.
+How to arrive:
+* CurGrid min path is either from Left or Top, so we can use right index and down index to track which pos we are in.
+* Recursive Case:
+	* Use this info: curMin = MIN(func(r-1, d), func(r, d-1)) + curVal;
+* Base Case:
+	* When r index and d index reaches to 0 we know we are in the 1st grid. which it's just the grid val.
+* Memorize each recursive val, check if grid is memorized, before do calc again.
+* Time: O(n);
+* Space: O(n^2);
+
 */
 
 class MinimumPathSum {
@@ -143,5 +154,44 @@ class MinimumPathSum {
       }
     }
     return dp[m - 1][n - 1];
+  }
+
+  /**
+	 * Solution: Memorization, top-down.
+	 * Time: O(n)
+	 * Space: O(n^2);
+	 */
+  public int minPathSum(int[][] grid) {
+    if (grid.length == 0) {
+      return 0;
+    }
+    int[][] memo = new int[grid.length][grid[0].length];
+    return helper(grid, grid.length - 1, grid[0].length - 1, memo);
+  }
+  
+  public int helper(int[][] grid, int r, int d, int[][] memo) {
+    int m = grid.length;
+    int n = grid[0].length;
+    if (r <= 0 && d <= 0) {
+      return grid[0][0];
+    }
+    if (memo[r][d] != 0) {
+      return memo[r][d];
+    }
+    
+    int curVal = grid[r][d];
+    if (r <= 0) {
+      curVal += helper(grid, r, d - 1, memo);
+      memo[r][d] = curVal;
+      return curVal;
+    }
+    if (d <= 0) {
+      curVal += helper(grid, r - 1, d, memo);
+      memo[r][d] = curVal;
+      return curVal;
+    }
+    curVal += Math.min(helper(grid, r - 1, d, memo), helper(grid, r, d - 1, memo));
+    memo[r][d] = curVal;
+    return curVal;
   }
 }
