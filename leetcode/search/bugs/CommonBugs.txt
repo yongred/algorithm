@@ -1,0 +1,11 @@
+Common Bugs:
+
+bug 1: wrong, Start < end -> corrtect, start > end
+--del--
+if (start <= end)
+---
+--add--
+if (start >= end) {
+---
+  return nums[start];
+}
