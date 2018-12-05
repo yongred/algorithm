@@ -101,6 +101,7 @@ The heapify procedure calls itself recursively to build heap
  in top down manner.
  
 * Build a heap from last non-leaf node (idx n/2-1) to root (idx 0); Like above.
+* **Key**: heapify always start from bottom level to the top level, so the Max can move up 1 level at a time. If start from top, root don't have access to bottom maxNodes.
 * Compare Max(root, Max(leftNode, rightNode)); Swap maxNode with Node.
 * If largest is not root, and child swapped with root, we need to heapify the subtree affected. B/c root changed for this subtree. curRoot might be < children.
 * ex: [3,5,1,4] 3<->5, [5,3,1,4] 3<->4, [5,4,1,3]; 3 swapped down twice.
