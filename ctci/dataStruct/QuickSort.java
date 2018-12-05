@@ -19,7 +19,55 @@ public class QuickSort {
 		}
 		return arr;
 	}
+
+	/**
+	 * ASC loop check <= pivot
+	 */
+	public void quickSort2(int[] A, int start, int end) {
+    if (start >= end) {
+      return;
+    }
+    // pivot is in correct position.
+    int pivot = partition2(A, start, end);
+    // sort left and right side of pivot.
+    quickSort2(A, start, pivot - 1);
+    quickSort2(A, pivot + 1, end);
+  }
+  
+  /**
+	 * ASC loop check <= pivot
+	 */
+  public int partition2(int[] A, int start, int end) {
+    // make endVal = pivot, or any from start -> end.
+    int pivot = A[end];
+    // pivotIndex is the left pos for <= pivot elm.
+    int pivotIndex = start;
+    // find elms <= pivot and put to left.
+    for (int hi = start; hi <= end - 1; hi++) {
+      // if lower val found, swap to left.
+      if (A[hi] <= pivot) {
+        // swap
+        int temp = A[pivotIndex];
+        A[pivotIndex] = A[hi];
+        A[hi] = temp;
+        // increment pivotIndex. Finished cur pos.
+        pivotIndex++;
+      }
+    }
+    // now insert pivot to the correct position, left all <= pivot, right > pivot.
+    // pivotIndex is at the 1st right position, (1st elm > pivot or pivot itself).
+    int temp = A[pivotIndex];
+    A[pivotIndex] = A[end];
+    A[end] = temp;
+    
+    return pivotIndex;
+  }
+
+  
 	
+	/**
+	 * left and right index compare.
+	 */
 	public void quickSort(int []arr, int left, int right){
 		int pivotIndex = partition(arr, left, right);
 		//break them down to 2 parts and sort
@@ -30,7 +78,10 @@ public class QuickSort {
 		else
 			return;
 	}
-	
+
+	/**
+	 * left and right index compare.
+	 */
 	public int partition(int [] arr, int left, int right){
 		int pivot = arr[right];
 		int leftPointer = left;

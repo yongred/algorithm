@@ -2,52 +2,60 @@
 import java.util.Arrays;
 
 public class MergeSort {
-	public void mergeSort(int A[], int str,int end){
-		//when length <= 1
-		if(str >= end)
-			return;
-		int mid = (str + end)/2;
-		//slide them
-		mergeSort(A, str, mid); //left side of array
-		mergeSort(A, mid+1, end); //right side of array
-		//merge together
-		merge(A, str, mid, end);
-	}
-	public void merge(int [] A, int str, int mid, int end){
-		int leftInd = str;
-		int rightInd = mid+1;
-		int temp[] = new int[A.length];
-		for(int x = str; x<= end; x++){
-			temp[x] = A[x];
-		}
-		int tmpInd = str;
-		//compare A[str-mid] to A[mid-end], put into temp[str-end]
-		while(leftInd <= mid && rightInd <= end){
-			if(A[leftInd] < A[rightInd]){
-				temp[tmpInd] = A[leftInd];
-				leftInd++;
-			}else{
-				temp[tmpInd] = A[rightInd];
-				rightInd++;
-			}
-			tmpInd++;
-		}
-		//either left array or right array is not completely put into temp
-		if(leftInd > mid){
-			for(int r = rightInd; r<= end; r++){
-				temp[tmpInd] = A[r];
-				tmpInd++;
-			}
-		}else{
-			for(int l = leftInd; l<= mid; l++){
-				temp[tmpInd] = A[l];
-				tmpInd++;
-			}
-		}
-		for(int i = str; i<= end; i++){
-			A[i] = temp[i];
-		}
-	}
+	public void mergeSort(int[] A, int start, int end) {
+    if (start >= end) {
+      return;
+    }
+    int mid = start + (end - start) / 2;
+    mergeSort(A, start, mid);
+    mergeSort(A, mid + 1, end);
+    merge(A, start, mid, end);
+  }
+  
+  public void merge(int[] A, int start, int mid, int end) {
+    // left size. include mid
+    int n1 = mid - start + 1;
+    // right size. Exclude mid
+    int n2 = end - mid;
+    // create temp arrs to merge vals, so A[n] won't be overrided.
+    // ex: [2,3] [1,4] A[2,3,1,4]; after 1st iter, A[1,3,1,4] [1,3] [1,4] 2 missed.
+    int[] left = new int[n1];
+    for (int i = start; i <= mid; i++) {
+      left[i - start] = A[i];
+    }
+    int[] right = new int[n2];
+    for (int i = mid + 1; i <= end; i++) {
+      right[i - (mid + 1)] = A[i];
+    }
+    
+    int i1 = 0;
+    int i2 = 0;
+    int arrIndex = start;
+    while (i1 < n1 && i2 < n2) {
+      if (left[i1] <= right[i2]) {
+        A[arrIndex] = left[i1];
+        i1++;
+      } else {
+        // right < left
+        A[arrIndex] = right[i2];
+        i2++;
+      }
+      arrIndex++;
+    }
+    // if left is not finished
+    while (i1 < n1) {
+      A[arrIndex] = left[i1];
+      i1++;
+      arrIndex++;
+    }
+    // if right is not finished.
+    while (i2 < n2) {
+      A[arrIndex] = right[i2];
+      i2++;
+      arrIndex++;
+    }
+  }
+  
 	public static void main(String [] args){
 		int [] myInts = {10,30,80,0,40,70,50,60,20};
 		Hw2p3q2 obj = new Hw2p3q2();
