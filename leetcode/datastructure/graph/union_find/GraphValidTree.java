@@ -11,6 +11,71 @@ Notice
 You can assume that no duplicate edges will appear in edges. Since all edges are undirected, [0, 1] is the same as [1, 0] and thus will not appear together in edges.
 */
 
+/**
+Solution: Union Find, with Union By Rank and Collapsing find.
+Ex: n = 5 and edges = [[0, 1], [0, 2], [1, 3], [3, 4]]
+parents: [1]=0; [2]=0;  [3]=1; [4]=3
+sizes: 
+[0]= 3; [1]= 2; [2]= 1; [3]= 1; [4]=1;
+
+0 <- 2
+^
+|
+1 <- 3 <- 4
+
+How to arrive:
+* Question ask us to determine if the constructed Graph is a valid tree;
+* Tree: 
+  * 1) Cannot have cycle, 1 path between 2 nodes;  
+  * 2) All nodes connected
+* We can construct the graph using Union Find to detect cycle.
+* Union Find has 2 Operations, union() and find();
+  * find() just finding the node in Sets, in this problem, we need to find the TopNode.
+    * **Key**: usual find takes O(n); We can optimize using Collapsing Find. O(lgN) at worse.
+    * Collapsing Find: while finding topNode of curNode, make all nodes' direct parent to topNode;
+    Ex: 4 -> 3 -> 2 -> 1;  find(1);  Going from 4 to 1;  4->1;  3->1;  2->1;
+    `
+    // -1 means itself is the TopNode, no more pointer.
+    if (parents[node] == -1) {
+      return node;
+    }
+    // find node's top, while make all nodes connect to the topNode.
+    // Compression. Ex: p(4) = p(3) = p(2) = p(1) = 1;
+    parents[node] = findTopNode(parents[node]);
+    return parents[node];
+    `
+  * union() just connect 2 unrelated sets/graph to eachother:
+    * Union By Rank: Compare topNodes' Rank (in this case Size); The one with the higher rank is the parent;
+    * lower rank topNode's parent -> higherRankNode;
+    * higherRankNode's size += lower rank topNode's size; (update the number of nodes in joined graph);
+    * **If union 2 nodes in the same set, it is a cycle**
+    `
+    public void union(int node1, int node2) {
+      int topNode1 = findTopNode(node1);
+      int topNode2 = findTopNode(node2);
+      // cycle
+      if (topNode1 == topNode2) {
+        return;
+      }
+      // compare size as rank. Higher # of size/rank become the parent.
+      if (sizes[topNode2] > sizes[topNode1]) {
+        parents[topNode1] = topNode2;
+        // all nodes in topNode1 belongs to topNode2;
+        sizes[topNode2] += sizes[topNode1];
+      } else {
+        // topNode1 size >= topNode2 size;
+        parents[topNode2] = topNode1;
+        // all nodes in topNode2 belongs to topNode1;
+        sizes[topNode1] += sizes[topNode2];
+      }
+    }`
+  * Combine Union By Rank with Collapsing Find, the time complextity of N opes and M nodes is Amortised O(N * 4) = O(N) to construct the graph.
+* Now we detected Cycle. We just need to find out whether nodes are all connected in 1 tree;
+* Loop and find sizes of nodes, 1 of them should be == N;
+* Time: O(n) V+E
+* Space: O(n)
+*/
+
 public class GraphValidTree {
 
 	/**
