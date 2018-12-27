@@ -1,0 +1,84 @@
+Tricks & Facts of Bit:
+
+1) x ^ 0s = x
+xor 0s: 1 ^ 0 = 1; 0 ^ 0 = 0; xor cannot be same So no change. , so all False means, 1s stay the same.
+ 1010 ^ 0000 = 1010;
+
+2) x ^ 1s = ~x
+xor 1s: 1 ^ 1 = 0; 0 ^ 1 = 1; xor cannot both be T, so all T means, 1s -> 0s. Becomes opposite. 
+1010 ^ 1111 = 0101;
+
+3) x ^ x = 0; 
+xor itself: Exclusive Or means cannot be same, since itself is the same, becomes False;
+1010 ^ 1010 = 0000;
+
+4) x & 0s = 0;
+AND 0s: AND needs both T, since all F, then it's F 0s;
+1010 & 0000 = 0000;
+
+5) x & 1s = x;
+AND 1s: AND needs both T, since all T, 1 & 1 = 1, 0 & 1 = 0; T stay T, F stay F;
+1010 & 1111 = 1010;
+
+6) x & x = x;
+AND itself: AND needs both T, so  1 & 1 = 1, 0 & 0 = 0; Stay the same.
+1010 & 1010 = 1010;
+
+7) x | 0s = x;
+OR 0s: OR needs only 1 T, so 1 | 0 = 1; 0 | 0 = 0; Stay the same;
+1010 | 0000 = 1010;
+
+8) x | 1s = 1s;
+OR 1s: OR needs only 1 T, so since bit is all T, It is all True;
+1010 | 1111 = 1111;
+
+9) x | x = x;
+OR itself: OR needs only T, 1 | 1 = 1; 0 | 0 = 0; no change.
+1010 | 1010 = 1010;
+
+---------------
+
+TWO's Complements and Negative Numbers:
+4 bits Example;
+
+Positive:   Negative:
+7 = 0 111;  -1 = 1 111
+6 = 0 110;  -2 = 1 110
+5 = 0 101;  -3 = 1 101
+4 = 0 100;  -4 = 1 100
+3 = 0 011;  -5 = 1 011
+2 = 0 010;  -6 = 1 010
+1 = 0 001;  -7 = 1 001
+0 = 0 000;
+
+* As you can see, negative bits are also from Largest 1111 to smallest 1001;
+7's complement is -1, -6's complement is 2;
+Which give us the equation: -k = '1' prepend res of 2^(n-1) - k;  let n= bits, k= number.
+Ex: bits = 4, k= 5; 
+2^(4-1) - 5 = 8-5 = 3 = 011; prepend 1 + 011 = 1011 = -5;
+['1' prepend res of 2^(n-1) - k] is Same As [(Flip k) + 1]; 
+Ex: 5 = 0101, Flip = 1010, 1010 + 1 = 1011 = -5;
+
+
+-------------
+
+Arithmetic vs Logical Right Shift:
+
+* Arithmetic Right Shift: 
+>> in Java. 
+Shift by Sign Bit; Roughly Divide by 2;
+Positive by 0s, Negative by 1s.
+Ex:
+1011 = -5, 1011 >> 1 = 1101 = -3;
+0101 = 5, 0101 >> 1 = 0010 = 2;
+
+* Logical Right Shift:
+>>> in Java.
+Shift by 0s.
+Ex:
+0110 = 6, 0110 >>> 1 = 0011 = 3;
+
+
+
+
+
