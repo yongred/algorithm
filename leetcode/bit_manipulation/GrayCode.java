@@ -54,6 +54,15 @@ prepend 1 will change the num, shift 1 << ith pos. mask | prevNums;
 How to Arrive:
 * There is a backtracking pattern here.
 * n Gray Code = prepend 0 to n-1 Gray Code, Then in reverse order prepend 1 to all n-1 Gray Code. Like the example above.
+* **Algorithm**:
+* We Add 0 to ResList as n=0 base;
+* Loop 0 -> n-1;
+	* Since prepend 0 doesn't change the vals, no need to do anything.
+	* Prepend 1 will change the num, we need to create mask for it.
+	* Mask = Shift 1 << ith pos. Use it to set/prepend 1 to cur n bits.
+	* Reversely Loop the ResList nums so far:
+		* Using OR '|' to SetBit to 1; (prevNum | mask);
+* Return resList at the end;
 * 
 * time: O(n * 2^n); gray code have 2^n numbers. Count as O(n^2) since that is the general amount;
 * Space: O(2^n);
