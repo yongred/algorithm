@@ -5,10 +5,8 @@ common bit tasks: get, set, clear
 
 public class BitTasks{
 
-	//right most are bit-0, so 1010 is 3rd bit to 0th bit
+	//right most are bit-0, so 1010 i[3210];
 	//use 0th bit: mask = 1 << i;
-	//right most is bit-1, so 1010 is 4th to 1st
-	//use 1st bit: mask = 1 << i-1;
 
 	public int getBit(int num, int i){
 		// to get bit-i: first shift 1 to bit-i; 
