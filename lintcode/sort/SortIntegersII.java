@@ -241,7 +241,7 @@ public class SortIntegersII {
    * @param A: an integer array
    * @return: nothing
    * Solution: HeapSort
-   * Time: O(nlgn); heapify cost O(h)=O(lgN), we do that n times. n * lgN;
+   * Time: O(nlgn); Build a Heap is amortised O(n); heapify cost O(h)=O(lgN), we do that n times. n * lgN;
 	 * Space: O(lgN); recursive call to child, == height of tree. O(1) if do it iteratively.
    */
   public void sortIntegers2(int[] A) {
