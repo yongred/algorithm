@@ -11,6 +11,7 @@ return [[1,1],[2,5],[4,4]]
 
 /**
 Solution1: Use MaxHeap with k points, Find point < maxElm in heap, replace it. The remining k elms are minDist.
+How to Arrive:
 * Question ask to find the k minDist from Origin. Which means we can use a Heap to maintain k size of minDists.
 * Easier to use a MaxHeap, so we can just pop off Larger points until k minDist left.
 * We can use the distance formula to calc dist of 2 points.
