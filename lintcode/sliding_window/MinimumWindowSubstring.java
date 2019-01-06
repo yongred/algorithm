@@ -55,7 +55,7 @@ Update for better understanding. For integers Sets of the same problem.
 import java.util.*;
 import java.io.*;
 
-public class MinWindowSubstring {
+public class MinimumWindowSubstring {
     /**
      * @param source : A string
      * @param target: A string
