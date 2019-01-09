@@ -59,8 +59,12 @@ public class KSubstringKDifferentCharacters {
       if (winChars[cur] == 1) {
         uniques++;
       }
-      // check from i-(k-1) to i substr, 
-      if (i > K - 1) {
+      if (i == K - 1) {
+        String substr = stringIn.substring(i - (K - 1), i + 1);
+        if (uniques == K && !strsSet.contains(substr)) {
+          strsSet.add(substr);
+        }
+      } else if (i > K - 1) {
         // remove chars before k len.
         winChars[stringIn.charAt(i - K)]--;
         if (winChars[stringIn.charAt(i - K)] == 0) {
