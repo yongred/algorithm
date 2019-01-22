@@ -179,7 +179,6 @@ class PalindromePairs {
   }
 
 
-
   /**
    * Solution 2: Trie, reverse the words.
    * Time: O(N * L^2); N= # of words; L= avg word.len; check palindrome is O(L);
