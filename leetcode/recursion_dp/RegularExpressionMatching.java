@@ -72,6 +72,9 @@ import java.io.*;
 
 class RegularExpressionMatching {
 
+  /**
+   * Solution: DP bottom-up
+   */
   public boolean isMatch(String s, String p) {
     char [] sch = s.toCharArray();
     char [] pch = p.toCharArray();
@@ -80,12 +83,12 @@ class RegularExpressionMatching {
     dp[0][0] = true;
     // init P for S='';
     for (int i = 1; i <= pch.length; i++) {
-      if (pch[i - 1] == '*') {
-        // if skip last char is true, ex: P= a* or .*b*, S='';
-        // **.. is false
-        if (i > 1 && pch[i - 2] != '*' && dp[i - 2][0]) {
-          dp[i][0] = true;
-        }
+      // if skip last char is true, ex: P= a* or .*b*, S='';
+      // **.. is false
+      if (pch[i - 1] != '*') {
+        // no need to check i >=2, b/c '*' or 'a**' or '*+' is not valid Regex.
+        // need a letter or '.' before *;
+        dp[i][0] = dp[i - 2][0];
       }
     }
     
@@ -96,10 +99,10 @@ class RegularExpressionMatching {
         if (pch[pi - 1] == '.' || pch[pi - 1] == sch[si - 1]) {
           dp[pi][si] = dp[pi - 1][si - 1];
         } else if (pch[pi - 1] == '*') {
-          if (pi > 1 && dp[pi - 2][si]) {
+          if (dp[pi - 2][si]) {
             // * can cancel last char. So carry down pi-2
             dp[pi][si] = true;
-          } else if (pi > 1 && (pch[pi - 2] == sch[si - 1] || pch[pi - 2] == '.')) {
+          } else if (pch[pi - 2] == sch[si - 1] || pch[pi - 2] == '.') {
             // compare * prev char to S cur, and look at prev S, si-1;
             // ex: S=aa P=a*; a = a so aa = a*;
             dp[pi][si] = dp[pi][si - 1];
@@ -108,6 +111,58 @@ class RegularExpressionMatching {
       }
     }
     return dp[pch.length][sch.length];
+  }
+
+  /**
+   * Solution: DP, top-down
+   * Time: O(S * P)
+   * Space: O(S * P)
+   */
+  public boolean isMatch(String s, String p) {
+    // memo, 0 not assigned, 1 is true, -1 is false;
+    int[][] memo = new int[p.length() + 1][s.length() + 1];
+    return helper(s, p, s.length(), p.length(), memo);
+  }
+  
+  public boolean helper(String s, String p, int si, int pi, int[][] memo) {
+    if (memo[pi][si] != 0) {
+      return (memo[pi][si] == -1) ? false : true;
+    }
+    // P "" match S "";
+    if (si == 0 && pi == 0) {
+      memo[pi][si] = 1;
+      return true;
+    }
+    boolean res = false;
+    if (pi == 0) {
+      memo[pi][si] = -1;
+      return false;
+    }
+    if (si == 0) {
+      if (p.charAt(pi - 1) == '*') {
+        res = helper(s, p, si, pi - 2, memo);
+      } else {
+        res = false;
+      }
+      memo[pi][si] = res ? 1 : -1;
+      return res;
+    }
+    // '.' case, chars == case
+    if (s.charAt(si - 1) == p.charAt(pi - 1) || p.charAt(pi - 1) == '.') {
+      // compare last chars.
+      res = helper(s, p, si - 1, pi - 1, memo);
+    } else if (p.charAt(pi - 1) == '*') {
+      // check pat-2, for cancel out prev char.
+      if (helper(s, p, si, pi - 2, memo)) {
+        res = true;
+      } else if (p.charAt(pi - 2) == s.charAt(si - 1) || p.charAt(pi - 2) == '.') {
+        // if schar == prev pchar, char before *; a* = aa; or .* = aa;
+        // just check prev s matches
+        res = helper(s, p, si - 1, pi, memo);
+      }
+    }
+    memo[pi][si] = res ? 1 : -1;
+    return res;
   }
   
 }
