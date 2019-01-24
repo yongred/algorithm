@@ -307,6 +307,7 @@ public class PourWater {
       holeWaters[dropLoc]++;
       return;
     }
+    // dropLoc is now on either 0 (-1 OutOfRange) or at loc (no change, have a Higher block/wall);
     // search right lowest;
     int rightLowest = holeHeights[loc] + holeWaters[loc];
     // right search
