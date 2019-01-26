@@ -1,37 +1,25 @@
 /**
-773. Sliding Puzzle
-On a 2x3 board, there are 5 tiles represented by the integers 1 through 5, and an empty square represented by 0.
+Sliding Game (8 Puzzles)
 
-A move consists of choosing 0 and a 4-directionally adjacent number and swapping it.
+You're given a 3x3 board of a tile puzzle, with 8 tiles numbered 1 to 8, and an empty spot. You can move
+any tile adjacent to the empty spot, to the empty spot, creating an empty spot where the tile originally
+was. The goal is to find a series of moves that will solve the board, i.e. get [ [1, 2, 3], [4, 5, 6], [7, 8, - ]...
 
-The state of the board is solved if and only if the board is [[1,2,3],[4,5,0]].
+http://www.1point3acres.com/bbs/thread-203769-1-1.html
 
-Given a puzzle board, return the least number of moves required so that the state of the board is solved. If it is impossible for the state of the board to be solved, return -1.
+实现一个sliding game,就是以前小时候玩的那种九宫格,九宫格,一共8个方块, 从1-8,一个方
+块空出来,然后打乱之后通过SLIDE还原,这个题要推广到N宫格, 先实现这个游戏,然后对于一
+个任意的BOARD,要你把他解出来.
 
-Examples:
+https://en.wikipedia.org/wiki/15_puzzle
 
-Input: board = [[1,2,3],[4,0,5]]
-Output: 1
-Explanation: Swap the 0 and the 5 in one move.
-Input: board = [[1,2,3],[5,4,0]]
-Output: -1
-Explanation: No number of moves will make the board solved.
-Input: board = [[4,1,2],[5,0,3]]
-Output: 5
-Explanation: 5 is the smallest number of moves that solves the board.
-An example path:
-After move 0: [[4,1,2],[5,0,3]]
-After move 1: [[4,1,2],[0,5,3]]
-After move 2: [[0,1,2],[4,5,3]]
-After move 3: [[1,0,2],[4,5,3]]
-After move 4: [[1,2,0],[4,5,3]]
-After move 5: [[1,2,3],[4,5,0]]
-Input: board = [[3,2,4],[1,5,0]]
-Output: 14
-Note:
+http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=291630
 
-board will be a 2 x 3 array as described above.
-board[i][j] will be a permutation of [0, 1, 2, 3, 4, 5].
+8 puzzle, 面试官也没要求最短路径, 只问 Ture False。
+直接用了暴力 dfs。。。没想到搜索空间巨大,stack overflow 了。。。。当前也没想到。。。
+估计这题得 bfs + pq 。大家小心这题。
+哎&#128532; 伤心啊,感觉前面面的都还行,到这大意了.
+基本的深搜和广搜的性能都非常差,一般使用 A* 或者 IDA*算法
 */
 
 /**
@@ -79,25 +67,26 @@ arrBoard[row][col] = board.charAt(i) - '0';
       * increment moves; we make 1 more move.
       * size = curQueueSize; The new 0 pos possible moves.
 * if not found, return -1;
-* Time: O(n!);
-* Space: O(n!);
+* Time: O(n!) 9! 9 grids;
+* Space: O(n!) 9! 9 grids;
 */
+import java.io.*;
+import java.util.*;
 
-class SlidingPuzzle {
-  
-  /**
+public class SlidingGame {
+	/**
    * Solution: BFS, serialize board to string.
    * Time: O(n!)
    * Space: O(n!)
    */
-  public int slidingPuzzle(int[][] board) {
+  public boolean canReach(int[][] board) {
     int rows = board.length;
     int cols = board[0].length;
-    int minSteps = 0;
     String init = serialize(board, rows, cols);
-    String target = "123450";
+    String target = "123456780";
     if (init == target) {
-      return 0;
+    	System.out.println("Yes");
+      return true;
     }
     Set<String> visited = new HashSet<>();
     Deque<String> queue = new ArrayDeque<>();
@@ -105,36 +94,32 @@ class SlidingPuzzle {
     visited.add(init);
     // BFS
     while (!queue.isEmpty()) {
-      // size of cur level.
-      int size = queue.size();
-      // step+1 at every level.
-      minSteps++;
-      for (int i = 0; i < size; i++) {
-        String curBoard = queue.pollFirst();
-        Point zeroPos = findZero(curBoard, rows, cols);
-        // check 4 dirs
-        for (int d = 0; d < 4; d++) {
-          int x = zeroPos.x + dirs[d][0];
-          int y = zeroPos.y + dirs[d][1];
-          // check boundaries
-          if (x >= 0 && x < rows && y >= 0 && y < cols) {
-            // generate new board;
-            String movedBoard = move(curBoard, cols, zeroPos.x, zeroPos.y, x, y);
-            // check if found target
-            if (movedBoard.equals(target)) {
-              return minSteps;
-            }
-            // check if visited
-            if (!visited.contains(movedBoard)) {
-              queue.addLast(movedBoard);
-              visited.add(movedBoard);
-            }
+      String curBoard = queue.pollFirst();
+      Point zeroPos = findZero(curBoard, rows, cols);
+      // check 4 dirs
+      for (int d = 0; d < 4; d++) {
+        int x = zeroPos.x + dirs[d][0];
+        int y = zeroPos.y + dirs[d][1];
+        // check boundaries
+        if (x >= 0 && x < rows && y >= 0 && y < cols) {
+          // generate new board;
+          String movedBoard = move(curBoard, cols, zeroPos.x, zeroPos.y, x, y);
+          // check if found target
+          if (movedBoard.equals(target)) {
+          	System.out.println("Yes");
+            return true;
+          }
+          // check if visited
+          if (!visited.contains(movedBoard)) {
+            queue.addLast(movedBoard);
+            visited.add(movedBoard);
           }
         }
       }
     }
     // not found.
-    return -1;
+    System.out.println("NO");
+    return false;
   }
   
   class Point {
@@ -200,5 +185,15 @@ class SlidingPuzzle {
       board[r][c] = Integer.valueOf(boardStr.charAt(i) + "");
     }
     return board;
+  }
+
+  public static void main(String[] args) {
+  	SlidingGame obj = new SlidingGame();
+  	int[][] board = {
+  		{1, 0, 3},
+  		{5, 2, 6},
+  		{4, 7, 8}
+  	};
+  	obj.canReach(board);
   }
 }
