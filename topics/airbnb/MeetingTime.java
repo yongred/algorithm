@@ -7,7 +7,8 @@ For exmaple, input is [[1, 3], [6, 7]], [[2, 4]], [[2, 3], [9, 12]] ]
 
 output [[4, 6], [7, 9]]
 
-Leetcode 相似问题: Leetcode 252/253 Meeting Rooms I/II
+Leetcode 相似问题: Leetcode 759 Employee Free Time
+Leetcode 252/253 Meeting Rooms I/II
 http://www.1point3acres.com/bbs/forum.php?mod=viewthread&tid=146537
 
 给一组 meetings(每个 meeting 由 start 和 end 时间组成)。求出在所有输入 meeting 时间段内没有
@@ -46,6 +47,19 @@ Res: [1, 2], [3, 12]
 
 * Time: O(nlgn)
 * Space: O(n)
+
+---------
+
+Solution: PriorityQueue;
+Ex: [[1, 4], [6, 7]], [[2, 5]], [[2, 3], [9, 12]]
+
+Res: [5,6] [7,9]
+pq: [1,4] [2,3] [2,5] [6,7] [9,12];
+[1,4] [2,3] 4> 2, no free, 4> 3 [1,4] ends later so we want to know when is he free.
+[1,4] [2,5] 4> 2, no free, 5> 4 [2,5] ends later;
+[1,5] [6,7] 5< 6 Yes free, add to res;  [6,7] ends later.
+[6,7] [9,12] 7< 12 Yes free, 7< 9 add to res;
+
 */
 
 import java.io.*;
@@ -53,11 +67,11 @@ import java.util.*;
 
 public class MeetingTime {
 
-	class Range {
+	class Interval {
 		int start;
 		int end;
 
-		Range(int start, int end) {
+		Interval(int start, int end) {
 			this.start = start;
 			this.end = end;
 		}
@@ -85,19 +99,19 @@ public class MeetingTime {
 	}
 	
 	/**
-	 * Solution: Divide range into points, sort the points. Count start times, cancel out with end times.
+	 * Solution: Divide interval into points, sort the points. Count start times, cancel out with end times.
 	 * Time: O(nLgn);
 	 * Space: O(n)
 	 */ 
-	public List<Range> findIntervals(List<List<Range>> employees) {
-		List<Range> res = new ArrayList<>();
+	public List<Interval> findIntervals(List<List<Interval>> employees) {
+		List<Interval> res = new ArrayList<>();
 		List<Point> points = new ArrayList<>();
-		// loop ranges, make them into points.
-		for (List<Range> rangeList : employees) {
+		// loop intervals, make them into points.
+		for (List<Interval> intervalList : employees) {
 			// get start and end time.
-			for (Range range : rangeList) {
-				points.add(new Point(range.start, true));
-				points.add(new Point(range.end, false));
+			for (Interval interval : intervalList) {
+				points.add(new Point(interval.start, true));
+				points.add(new Point(interval.end, false));
 			}
 		}
 		// Sort the points
@@ -112,7 +126,7 @@ public class MeetingTime {
 				busyEmployees++;
 				// Not first start time, but 0 busy before this. We found a available time interval.
 				if (i > 0 && busyEmployees == 1) {
-					res.add(new Range(avaliableStart, points.get(i).time));
+					res.add(new Interval(avaliableStart, points.get(i).time));
 					avaliableStart = -1;
 				}
 			} else {
@@ -128,18 +142,49 @@ public class MeetingTime {
 	}
 
 	/**
+	 * Solution: PriorityQueue.
+	 * Time: O(nlgn)
+	 */
+	public List<Interval> findIntervals2(List<List<Interval>> employees) {
+		List<Interval> res = new ArrayList<>();
+		// ASC startTime heap.
+		PriorityQueue<Interval> pq = new PriorityQueue<>((a, b) -> {
+			return a.start - b.start;
+		});
+		// add employee intervals
+		for (List<Interval> list : employees) {
+			pq.addAll(list);
+		}
+
+		Interval prev = pq.poll();
+		while (!pq.isEmpty()) {
+			// prev endtime < cur startTime, found interval
+			if (prev.end < pq.peek().start) {
+				res.add(new Interval(prev.end, pq.peek().start));
+				prev = pq.poll();
+			} else {
+				// whoever has the later endtime we need to find out when is he free
+				prev = (prev.end > pq.peek().end) ? prev : pq.peek();
+				pq.poll();
+			}
+		}
+		// Done;
+		return res;
+	}
+
+	/**
 	 * Follow up: Intervals for atleast k employee is free;
 	 * Solution: free >= k; busy <= n-k;
 	 */
-	public List<Range> findIntervalsAtleastK(List<List<Range>> employees, int k) {
-		List<Range> res = new ArrayList<>();
+	public List<Interval> findIntervalsAtleastK(List<List<Interval>> employees, int k) {
+		List<Interval> res = new ArrayList<>();
 		List<Point> points = new ArrayList<>();
-		// loop ranges, make them into points.
-		for (List<Range> rangeList : employees) {
+		// loop intervals, make them into points.
+		for (List<Interval> intervalList : employees) {
 			// get start and end time.
-			for (Range range : rangeList) {
-				points.add(new Point(range.start, true));
-				points.add(new Point(range.end, false));
+			for (Interval interval : intervalList) {
+				points.add(new Point(interval.start, true));
+				points.add(new Point(interval.end, false));
 			}
 		}
 		// Sort the points
@@ -156,7 +201,7 @@ public class MeetingTime {
 				// startInterval is set, means have atleast k free. 
 				// And this 1 busyEmployee just start meeting. Free = k-1, end of cur interval
 				if (avaliableStart != -1 && busyEmployees == employees.size() - k + 1) {
-					res.add(new Range(avaliableStart, points.get(i).time));
+					res.add(new Interval(avaliableStart, points.get(i).time));
 					// reset avaliableStart for next interval
 					avaliableStart = -1;
 				} else if (avaliableStart == -1 && busyEmployees <= employees.size() - k) {
@@ -179,7 +224,7 @@ public class MeetingTime {
 				} else if (i == points.size() - 1 && avaliableStart != -1) {
 					// if this is last point endtime. And a intervalStart has not yet closed.
 					// add last endtime as avaliable point
-					res.add(new Range(avaliableStart, points.get(i).time));
+					res.add(new Interval(avaliableStart, points.get(i).time));
 				}
 			}
 		}
@@ -189,29 +234,34 @@ public class MeetingTime {
 
 	public static void main(String[] args) {
 		MeetingTime obj = new MeetingTime();
-		List<List<MeetingTime.Range>> employees = new ArrayList<>();
-		List<MeetingTime.Range> emp1 = new ArrayList<>();
-		emp1.add(obj.new Range(1, 3));
-		emp1.add(obj.new Range(6, 7));
-		List<MeetingTime.Range> emp2 = new ArrayList<>();
-		emp2.add(obj.new Range(2, 4));
-		List<MeetingTime.Range> emp3 = new ArrayList<>();
-		emp3.add(obj.new Range(2, 3));
-		emp3.add(obj.new Range(9, 12));
+		List<List<MeetingTime.Interval>> employees = new ArrayList<>();
+		List<MeetingTime.Interval> emp1 = new ArrayList<>();
+		emp1.add(obj.new Interval(1, 3));
+		emp1.add(obj.new Interval(6, 7));
+		List<MeetingTime.Interval> emp2 = new ArrayList<>();
+		emp2.add(obj.new Interval(2, 4));
+		List<MeetingTime.Interval> emp3 = new ArrayList<>();
+		emp3.add(obj.new Interval(2, 3));
+		emp3.add(obj.new Interval(9, 12));
 		employees.add(emp1);
 		employees.add(emp2);
 		employees.add(emp3);
 
-		List<MeetingTime.Range> res = obj.findIntervals(employees);
-		res.forEach(range -> {
-			System.out.println(range.start + " " + range.end);
+		List<MeetingTime.Interval> res = obj.findIntervals(employees);
+		res.forEach(interval -> {
+			System.out.println(interval.start + " " + interval.end);
+		});
+		System.out.println("PriorityQueue Solution ------");
+		res = obj.findIntervals2(employees);
+		res.forEach(interval -> {
+			System.out.println(interval.start + " " + interval.end);
 		});
 
 		int k = 2;
-		List<MeetingTime.Range> res2 = obj.findIntervalsAtleastK(employees, k);
+		List<MeetingTime.Interval> res2 = obj.findIntervalsAtleastK(employees, k);
 		System.out.println("with k " + k);
-		res2.forEach(range -> {
-			System.out.println(range.start + " " + range.end);
+		res2.forEach(interval -> {
+			System.out.println(interval.start + " " + interval.end);
 		});
 
 	}

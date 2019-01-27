@@ -27,6 +27,27 @@ A solution set is:
 ]
 */
 
+/**
+Solution: Backtracking
+Ex: [2,3,6,7] tar=7;
+Res: [2,2,3], [7];
+2 -> (2,3,6,7): [2,2] -> (2,3,6,7): [2,2,2] -> (2,3,6,7) -> [2,2,2,2] 8 > 7 return;
+[2,2,2] -> 3,6,7 sum > 7 return; [2,2,3]->(2,3,6,7): 7=7 Add to res;
+3 -> (3,6,7): [3,3] -> (6,7): [3,3] 6,7 sum > 7; return;
+6->(6,7) sum > 7; return;
+7 -> (7): 7==7, Add to res;
+
+How to Arrive:
+* To get all combos, we choose a num in curPos, then go choose for next pos with other avaliable candidates until sum = target; 
+* If candidate choosed for curPos not leads to target, then we remove this candidate and choose other candidates for cur position.
+* The question says it wants all Unique combos so order doesn't matter, Ex: [2,2,3] = [2,3,2];
+* B/c Order doesn't matter, we don't want to go back to prev num and choose again for diff positions, like if we have [2,3] when 3 is at first pos [3] we don't want [3,2];
+* Therefore we need a Param startIdx to indicates nums before startIdx are all tested/combined with all other nums, no need to choose them again.
+* Because we can choose cur candidate repeatly, we include cur startIdx as begin point, That means it is still an avaliable Candidate to choose.
+* Time: O(candidates^target); loop candidates every recurse call until target = 0;
+* Space: O(candidates^target)
+*/
+
 class CombinationSum {
   
   /**
