@@ -201,7 +201,7 @@ class CheapestFlightsKStops {
   }
 
   /**
-   * Solution: Dijkstra shortest Path alg. Using PriorityQueue.
+   * Solution: Dijkstra shortest Path alg. Using PriorityQueue. Same as BFS;
    * Time: O(n^k); same as BFS, B/c we don't use visited.
    * Space: O(n^k); same as runtime, using PQ. (n * n-1) nodes next level;
    */
