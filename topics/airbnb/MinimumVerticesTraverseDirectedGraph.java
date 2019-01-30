@@ -2,6 +2,18 @@
 Minimum Vertices to Traverse Directed Graph
 
 Given a directed grapjh, represented in a two dimension array, output a list of points that can be used to travese every points with the least number of visited vertices.
+-------
+Better Title to Understand: Least points that can traverse all points in the directed graph
+
+Better Way to Explain the Question: Given directed graph, find the minimum set of vertices that can traverse all the vertices in the graph.
+
+E.g: 
+    5 -> 4  
+    4 -> 6
+    4 -> 7
+    5 -> 8
+In the above example, the minimum set of vertices will be "5", as you can visit all other vertices from vertex 5.
+
 
 https://cs.stackexchange.com/questions/1698/find-the-minimal-number-of-runs-to-visit-every-edge-of-a-directed-graph
 
@@ -60,6 +72,105 @@ https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm。然后取没有入度的 
 即可
 */
 
+/**
+Solution: Build a graph With Indegrees; 0 indegrees are the ones connect to most points. Then traverse unvisited node in cycle.
+How to Arrive:
+* To find the Least Vertices that can go to most points, Just find the ones with Least Indegrees;
+* 0 indegrees Ones can leads to most points. DFS those, Add 0 indegree Nodes to Res;
+* Now if there are nodes unvisited. they are cycles with no outside node points to them.
+* Ex: 2<->3; 2->3->4->2;
+* We just need any 1 of the node in those cycle to traverse the whole cycle nodes.
+* So traverse them DFS, and pick the startingNode add to Res;
+* Time: O(V + E);
+* Space: O(V + E);
+*/
+
+import java.util.*;
+import java.io.*;
+
 public class MinimumVerticesTraverseDirectedGraph {
-	
+
+	/**
+	Solution: Build a graph With Indegrees; 0 indegrees are the ones connect to most points. Then traverse unvisited node in cycle.
+
+	* Time: O(V + E);
+	* Space: O(V + E);
+	*/
+	public List<Integer> getMin(int[][] edges, int n) {
+		// topologiacal sort, build a graph with indegrees
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
+		buildGraph(edges, n, graph);
+		helper(graph, n);
+		return new ArrayList<>(resSet);
+	}
+
+	Map<Integer, Integer> indegrees = new HashMap<>();
+	Set<Integer> visited = new HashSet<>();
+	Set<Integer> resSet = new HashSet<>();
+
+	public void helper(Map<Integer, Set<Integer>> graph, int n) {
+		// 0 indegrees
+		for (int node : indegrees.keySet()) {
+			if (indegrees.get(node) == 0) {
+				// add 0 indegrees to resSet; B/c they can leads to most points.
+				resSet.add(node);
+				dfs(graph, node, new HashSet<>());
+			}
+		}
+		// traversed all nodes connected to 0 indegrees.
+		// If there are unvisited, they are cycles with no outside node points to them.
+		// Ex: 2<->3; 2->3->4->2; Visit them
+		for (int node = 0; node < n; node++) {
+			if (visited.contains(node)) {
+				continue;
+			}
+			// add one of the node in cur cycle.
+			resSet.add(node);
+			dfs(graph, node, new HashSet<>());
+		}
+	}
+
+	public void dfs(Map<Integer, Set<Integer>> graph, int node, Set<Integer> curPathVisited) {
+		if (curPathVisited.contains(node)) {
+			// cycle
+			return;
+		}
+		if (visited.contains(node)) {
+			return;
+		}
+		visited.add(node);
+		curPathVisited.add(node);
+		// go adj paths
+		for (int child : graph.get(node)) {
+			dfs(graph, child, curPathVisited);
+		}
+		curPathVisited.remove(node);
+	}
+
+	public void buildGraph(int[][] edges, int n, Map<Integer, Set<Integer>> graph) {
+		for (int i = 0; i < n; i++) {
+			graph.putIfAbsent(i, new HashSet<>());
+			// init count 0;
+			indegrees.putIfAbsent(i, 0);
+		}
+		// connect edges
+		for (int[] edge : edges) {
+			graph.get(edge[0]).add(edge[1]);
+			// +1 indegree for the child.
+			indegrees.put(edge[1], indegrees.get(edge[1]) + 1);
+			System.out.println(edge[1] + " indegrees " + indegrees.get(edge[1]));
+		}
+	}
+
+
+	public static void main(String[] args) {
+		MinimumVerticesTraverseDirectedGraph obj = new MinimumVerticesTraverseDirectedGraph();
+		int[][] edges = new int[][] {{1, 2}, {2, 3}, {3, 2}, {4, 3}, {5, 0}, {0, 5}};
+		int n = 6;
+		List<Integer> res = obj.getMin(edges, n);
+		res.forEach(num -> {
+			System.out.print(num + ", ");
+		});
+		System.out.println();
+	}
 }
