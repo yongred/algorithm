@@ -121,6 +121,7 @@ public class FindMedianLargeIntegerFileOfIntegers {
 		} else if (smallerCount < k) {
 			// guess should be larger, go right
 			// eliminates leftside. guess+1; we know tar > guess, and we know guess >= largestSmaller.
+			// nums size never changed so we don't need to change k, we count the whole arr every time.
 			return findKth(nums, k, guess + 1, rightbound);
 		} else {
 			// count > k, guess should be smaller, go left

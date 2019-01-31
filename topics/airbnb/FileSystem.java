@@ -108,15 +108,15 @@ public class FileSystem {
 
 		// follow up watch callback, path's dir parents' callback.
 		String[] parentFiles = dir.split("/");
-		StringBuilder parents = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		for (String file : parentFiles) {
 			// /a -> /a/b -> /a/b/c ...
-			if (parents.length() == 0 && file.equals("")) {
-				// skip first ""
+			if (sb.length() == 0 && file.equals("")) {
+				// skip first "" or it will becomes "//""
 				continue;
 			}
-			parents.append("/" + file);
-			String curPath = parents.toString();
+			sb.append("/" + file);
+			String curPath = sb.toString();
 			if (callbackMap.containsKey(curPath)) {
 				Runnable func = callbackMap.get(curPath);
 				func.run();

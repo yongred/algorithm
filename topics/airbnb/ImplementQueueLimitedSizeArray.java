@@ -32,7 +32,7 @@ import java.util.*;
 public class ImplementQueueLimitedSizeArray {
 
 	class ListNode {
-		// index of first added elm
+		// index of first added elm, Poll from. FIFO.
 		int first;
 		// current elms count
 		int size;

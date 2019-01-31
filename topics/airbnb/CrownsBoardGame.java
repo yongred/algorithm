@@ -9,6 +9,30 @@ bfs，小哥说没问题。最后有个bug没搞出来。
 
 连续相同类型的土地面积，比如题图里蓝色的水那块的得分是 7(土地面积) * 3(皇冠数) = 21，森林那块是4(土地面积) * 0(皇冠数)  = 0，求的是整个board的得分
 
+------------------
+
+一种游戏叫做Kingdomino，游戏在棋盘上进行（比如5x5）。棋盘上有不同种类的方块，方块上可能有皇冠。例如，一个方块表示为："G2"，那么它表示方块的种类为"G"，上面有两个皇冠。
+我们规定，同一种类的方块可连成一片，我们可以称之为一个“区域”。那么这个区域的得分为：同种方块数量 x 区域内的皇冠数。整个游戏的得分为，所有不同种类区域的得分之和。
+
+例如一下棋盘，array of strings：[
+  "G0 W1 W1 W0 P2",
+  "W0 W0 F0 F0 F0",
+  "W0 W1 F0 S2 S1",
+  "G0 X0 G1 G0 G0",
+  "S0 M2 M0 G1 F0"
+];
+
+上面棋盘中：
+21分来自，7个W x 3皇冠；
+2分来自，1个P x 2皇冠；
+6分来自，2个S x 3皇冠；
+8分来自，4个G x 2皇冠；
+4分来自，2个M x 2皇冠；
+
+总共41分。
+
+问题：创建一个类，我们可以叫它Kingdom，实例化的时候输入棋盘（array of strings），并且实现一个方法，calculateScore()，这个方法计算总分数。
+
 lands: -1 is not a land.
 {1,2,2,2,3}
 {2,2,4,4,4}
@@ -46,69 +70,85 @@ public class CrownsBoardGame {
 	 * Time: O(n)
 	 * Space: O(n)
 	 */
-	public int getScore(String[] board, int[][] crowns) {
+	public int getScore(String[] board) {
 		// crowns [r][c] = # of crowns;
-		int rows = board.length;
-		int cols = board[0].length();
+		List<List<String>> newBoard = convertBoard(board);
+		int rows = newBoard.size();
+		int cols = newBoard.get(0).size();
 		// BFS
-		Queue<Point> queue = new ArrayDeque<>();
-		// char, count size;
-		int[] sizes = new int[256];
-		int[] crownsCount = new int[256];
-		queue.add(new Point(0, 0));
-		int[][] dirs = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 		boolean[][] visited = new boolean[rows][cols];
-		visited[0][0] = true;
+		int total = 0;
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				if (!visited[r][c]) {
+					total += bfs(newBoard, r, c, visited);
+				}
+			}
+		}
+		return total;
+	}
 
+	int[][] dirs = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+	public int bfs(List<List<String>> newBoard, int row, int col, boolean[][] visited) {
+		int rows = newBoard.size();
+		int cols = newBoard.get(0).size();
+
+		Queue<Point> queue = new ArrayDeque<>();
+		queue.add(new Point(row, col));
+		visited[row][col] = true;
+
+		int sizes = 0;
+		int crowns = 0;
 		while (!queue.isEmpty()) {
 			Point point = queue.poll();
-			char cur = board[point.x].charAt(point.y);
-			sizes[cur]++;
-			// System.out.println(cur + " " + sizes[cur]);
-			// check crowns
-			if (crowns[point.x][point.y] > 0) {
-				crownsCount[cur] += crowns[point.x][point.y];
-			}
+			// update sizes and crowns
+			String curGrid = newBoard.get(point.x).get(point.y);
+			char land = curGrid.charAt(0);
+			int crown = curGrid.charAt(1) - '0';
+			sizes++;
+			crowns += crown;
 			// 4 dirs
 			for (int i = 0; i < 4; i++) {
 				int x = point.x + dirs[i][0];
 				int y = point.y + dirs[i][1];
-				// boundaries
+				// check boundaries, and if is Ocean;
 				if (x >= 0 && x < rows && y >= 0 && y < cols && !visited[x][y]) {
-					queue.add(new Point(x, y));
-					// Have to make visited while adding queue, if not other siblings will also Add this grid to queue.
-					// Causing Duplicates;
-					visited[x][y] = true;
+					char toLand = newBoard.get(x).get(y).charAt(0);
+					if (land == toLand) {
+						queue.add(new Point(x, y));
+						visited[x][y] = true;
+					}
 				}
 			}
 		}
-		// check how many size and crowns
-		int total = 0;
-		for (int i = 0; i < 256; i++) {
-			// System.out.println((i + 'a') + " Size " + sizes[i] + " crowns " + crownsCount[i]);
-			total += (sizes[i] * crownsCount[i]);
+		// calc
+		return (sizes * crowns);
+	}
+
+	public List<List<String>> convertBoard(String[] board) {
+		int rows = board.length;
+		List<List<String>> res = new ArrayList<>();
+
+		for (int r = 0; r < rows; r++) {
+			String[] row = board[r].split(" ");
+			res.add(Arrays.asList(row));
 		}
-		return total;
+		
+		return res;
 	}
 
 	public static void main(String[] args) {
 		CrownsBoardGame obj = new CrownsBoardGame();
 		String[] board = {
-			"ABBBC",
-			"BBDDD",
-			"BBDEE",
-			"FFGGG",
-			"HIIGJ"
-		};
-		int[][] crowns = new int[][] {
-			{0,1,1,0,2},
-			{0,0,0,0,0},
-			{0,1,0,2,1},
-			{0,0,1,0,0},
-			{0,2,0,1,0}
+			"G0 W1 W1 W0 P2",
+		  "W0 W0 F0 F0 F0",
+		  "W0 W1 F0 S2 S1",
+		  "G0 X0 G1 G0 G0",
+		  "S0 M2 M0 G1 F0"
 		};
 
-		int res = obj.getScore(board, crowns);
+		int res = obj.getScore(board);
 		System.out.println(res);
 	}
 }

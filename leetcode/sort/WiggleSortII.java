@@ -25,14 +25,13 @@ we want [3,2,1] in even pos: 0,2,4;
 Use a map index: 
 i[0,1,2,3,4,5]
 n[1,5,2,6,3,4]
---------------
 m[i1,i3,i5,i0,i2,i4]
          l
             i
          r
-n[1]=5 > 4 swap(i1 n5, l1 n5) l++ i++; n[3]=3 < 4 swap(i3 n3, r4 n2) r--;
-n[3]=2 < 4 swap(i3 n2, r2 n4) r--; n[3]=4 = 4, i++;
-n[5]=1 < 4 swap(i5 n1, r0 n6) r--; n[5]=6 > 4 swap(i5 n6, l3 n4) i++ l++;
+n[m1]=5 > 4 swap(i1 n5, l1 n5) l++ i++; n[m3]=3 < 4 swap(i3 n3, r4 n2) r--;
+n[m3]=2 < 4 swap(i3 n2, r2 n4) r--; n[m3]=4 = 4, i++;
+n[m5]=1 < 4 swap(i5 n1, r0 n6) r--; n[m5]=6 > 4 swap(i5 n6, l3 n4) i++ l++;
 i > r Done;
 */
 
@@ -76,8 +75,8 @@ class WiggleSortII {
     int median = findKthLargest(nums, mid, 0, size - 1);
     // now all larger nums on left, all smaller nums on right. Partly sorted.
     int oddPos = 0;
-    int i = 0;
     int evenPos = size - 1;
+    int i = 0;
     // 3 way partition.
     while (i <= evenPos) {
       // > median put in odd positions 
@@ -98,6 +97,9 @@ class WiggleSortII {
   }
   
   public int mapIndex(int i, int size) {
+    // return (2 * i + 1) % (size | 1);
+    // Ex: even: n=6 (110 | 1) = 111 = 7; Odd n=7 (111 | 1)= 111= 7;
+    // 0,1,2,3,4,5,6 -> 3s, 0L, 4s, 1L, 5s ,2L, 6s
     // for 1st half
     // 0->1, 1->3, 2->5 Odds indexes (2 * i + 1);
     if (i < size / 2) {
@@ -121,6 +123,7 @@ class WiggleSortII {
     int pivotIndex = partitionDesc(nums, start, end);
     // (pIdx-start) < k-1, means target is smaller, on the right.
     // (pIdx-start) we need to covert to pos in 0->len-1;
+    // k-1 is the index of kth. 5th is idx4, 0th is idx1;
     if (k - 1 > pivotIndex - start) {
       // update k, larger elms elimated on left include pivot.
       k = k - (pivotIndex - start + 1);

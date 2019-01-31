@@ -78,7 +78,7 @@ How to Arrive:
 **Define Trie**:
 * The Trie we implement will contain reversed words.
 * TrieNode contains: TrieNode[26] representing 26 letters, (ask interviewer if it is only 26 letters);
-* We need to indentify which word is it. Since question asking for indexes pairs. We will store the Index of words[index] array in starting TrieNode. Instead of isWord boolean.
+* We need to identify which word is it. Since question asking for indexes pairs. We will store the Index of words[index] array in starting TrieNode. Instead of isWord boolean.
 * The TrieNode will also contain a **PrefixList** that have indexes of words that this substr can be a prefix of to form a palindrome. (if word - substr->thisNode == Palindrome) then add that word's index in this list. B/c it can be formed as a Palindrome.
 Ex: "cc(cba)", if a word exist as "abc" then they can form "abc|cccba";
 
@@ -231,6 +231,7 @@ class PalindromePairs {
       }
       // check if rest of word - curPrefix/postfix == palindrome.
       if (isPalindrome(word, 0, i)) {
+        // n->i+1 can form a palin with its reversed.
         curNode.prefixList.add(index);
       }
       // go to letter node, continue creation of word. Next letter.
