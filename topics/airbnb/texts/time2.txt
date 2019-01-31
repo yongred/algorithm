@@ -7,5 +7,8 @@ Palindrome Pairs
 Implement Queue with Limited Size of Array
 Pour Water.
 Cheapest Flights Within K Stops
+Menu Combination Sum
+Ten Wizards
+List of List (2D List) Iterator
 
 35 total.
