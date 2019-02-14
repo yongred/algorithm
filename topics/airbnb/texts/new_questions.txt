@@ -1,0 +1,41 @@
+1. Key Value Store:
+第二轮. 貌似遇到了新题，反正我之前没见过。就是给你的一个表，里面有各个connection下的request某个key以及相应的response结果的记录，如果key 存在，则 response最后一列就是该key的值，否则返回一个“-“ 表大概是长这个样子：
+connid           tag            command         status             key
+1                req               get                           "user_1"
+3                req               get                           "user_2"
+1                resp               get                          "user_1"
+3                resp               get                          "-"
+2                req               getk                          "user_1"
+2                req               getk                          "listen_1"
+2                req               getk         end_loop         "-"
+2                resp               getk                         "user_1"
+2                resp               getk                         "-"
+
+类似这样，当同一个connection请求多于一个key时要用getk。最后问给一个key 问这个key被hit了多少次（response成功）以及Miss了多少次。 比如user_1 hits 2 miss0。
+题目描述非常非常长，再加上我用的c++,面试官延了一些时间。关键是我问了面试官，response 是不是按照req顺序来的， 他说不是。弄的我很混乱，最后还是写的有问题。后来觉得他应该是指不是同一个connection 下的请求与响应不一定按照顺序，比如第三行和第4行是可能互换的。
+总之凉凉，感觉找工作季人品差到极致，貌似这家我同学中只有我没遇到见过的题 T_T， 发个面经祝大家好运。
+
+
+2. Interval Changed.
+ coding:  新题，反正我没见过。题目是给你一堆24小时内旅店预定的信息，{{"2-4", "100"}, {"4-8", "200"}, {"5-7", "300"}}，要求找出收入最大的non-overlapping的时间段。现场写出来了。
+
+
+3. Shutbox game / pair sum
+至于Shutbox, 估计可以wiki一下，就是有一个游戏，有0~9块小木板，每一次扔俩骰子，和为sum, 然后可以选择翻一块或者是两块小木板，使其和 = sum。 小木板翻过一次就不能再用了。若当前已经没有可以翻的小木板（比如小木板还剩1，2，3，4，俩骰子和为9）则游戏结束，输了。赢的条件是，所有的小木板都被顺利翻完。
+
+代码有三个小问，第一个是写代码similation 游戏过程，第二个有点记不太清，类似于算出你选择的策略的成功率，最后一个是选出一个比较好的策略使成功率提高。
+
+新题，题目描述起来很复杂，有9个tile，第一个tile上有数字1，第二个tile有数字2，etc.，初始状态都是unflipped，两个筛子，一个玩家。每一轮玩家摇筛子，看两个筛子的和，计做s，之后可以有两个options，第一个option是找s对应的tile，如果是unflipped，可以选择flip，这样这个tile就变成flipped了。第二个option是找两个tile，保证两个筛子的和是s，并且都是unflipped的。题目就是模拟整个游戏，玩家的策略可以是优先做option1，如果option1没法使用（比如两个筛子的和是10，或者对应的tile已经flipped），就选择option2。如果options2也没办法使用，这个时候游戏以输结束。如果在任何时候所有9个tile都被flipped了，这个时候游戏就算赢。模拟100K次游戏，看看这个策略玩家赢的概率有多大。面试官提示说赢的概率大概在10%左右。
+
+
+
+4. Leetcode 472 Concatenated Words
+
+
+
+5. bit masking来做的dynamic programming: Count ways to assign unique cap to every person.
+https://www.geeksforgeeks.org/bitmasking-and-dynamic-programming-set-1-count-ways-to-assign-unique-cap-to-every-person/
+
+
+
+

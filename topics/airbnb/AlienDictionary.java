@@ -2,6 +2,8 @@
 892. Alien Dictionary
 There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
 
+第一轮是给一堆按某种方式排序好的单词，让你猜字母顺序，返回任意方案，解法就是每个字母是图中的点，构建有向图，然后做拓扑排序，bfs或者dfs都行。follow up是给出所有可能的方案，这里就需要dfs来枚举拓扑排序中每次选哪个点，记得回溯的时候恢复之前的选择。
+
 Example
 Given the following words in dictionary,
 
