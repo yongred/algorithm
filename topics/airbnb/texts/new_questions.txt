@@ -3,20 +3,21 @@
 connid           tag            command         status             key
 1                req               get                           "user_1"
 3                req               get                           "user_2"
-1                resp               get                          "user_1"
-3                resp               get                          "-"
+1                resp              get                           "user_1"
+3                resp              get                           "-"
 2                req               getk                          "user_1"
 2                req               getk                          "listen_1"
 2                req               getk         end_loop         "-"
-2                resp               getk                         "user_1"
-2                resp               getk                         "-"
+2                resp              getk                          "user_1"
+2                resp              getk                          "-"
 
 类似这样，当同一个connection请求多于一个key时要用getk。最后问给一个key 问这个key被hit了多少次（response成功）以及Miss了多少次。 比如user_1 hits 2 miss0。
+
 题目描述非常非常长，再加上我用的c++,面试官延了一些时间。关键是我问了面试官，response 是不是按照req顺序来的， 他说不是。弄的我很混乱，最后还是写的有问题。后来觉得他应该是指不是同一个connection 下的请求与响应不一定按照顺序，比如第三行和第4行是可能互换的。
 总之凉凉，感觉找工作季人品差到极致，貌似这家我同学中只有我没遇到见过的题 T_T， 发个面经祝大家好运。
 
 
-2. Interval Changed.
+2. Max Non Overlap Interval.
  coding:  新题，反正我没见过。题目是给你一堆24小时内旅店预定的信息，{{"2-4", "100"}, {"4-8", "200"}, {"5-7", "300"}}，要求找出收入最大的non-overlapping的时间段。现场写出来了。
 
 
