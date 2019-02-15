@@ -51,6 +51,30 @@ AXXA...这样下去 avaialble 的位置就减少到 4 - cnt, 依次进行,但是
 减小搜索空间,方法适用于 n 长的 String.
 */
 
+/**
+3234
+
+Res: 3234
+candidates: 1,2,3,4,5,6
+1111 -> (0,0);
+2222 -> (1,0); a 2 digit in correctPos
+3333 -> (2,0); two 3 digits in correctPos
+4444 -> (1,0); a 4 in correctPos.
+eliminates 1,5,6;
+
+candidates: 2(1), 3(2), 4(1);
+0222 -> (1,0);
+0333 -> (1,0); 3 has 2counts - 1 = 1; found 1st digit = 3; 3(2)->3(1)
+
+candidates: 2(1), 3(1), 4(1);
+0022 -> (0,0); 2(1) -> 0; found 2nd digit; 2(1)->2(0);
+
+candidates: 3(1), 4(1);
+0003 -> (0,0); 3(1)-> 0; found 3rd; 3(1)->0;
+
+candidates: 4(1); leftover = 1 = (1) count of 4; 4th digit DONE
+*/
+
 import java.util.*;
 import java.io.*;
 
@@ -118,12 +142,12 @@ public class GuessNumber {
       int cand = iter.next();
       int guessedCount = res.size();
       String guessCand = genNumber(res, cand);
-      int guessRes = guessServer(guessCand);
+      int corrects = guessServer(guessCand);
       
-      if (guessRes == guessedCount) {
+      if (corrects == guessedCount) {
         iter.remove();
-      } else if (guessRes > guessedCount) {
-        for (int i = guessedCount; i < guessRes; i++) {
+      } else if (corrects > guessedCount) {
+        for (int i = guessedCount; i < corrects; i++) {
           res.add(cand);
         }
         iter.remove();
@@ -138,14 +162,125 @@ public class GuessNumber {
   }
 
   /**
-   * Follow Up
+   * Follow Up: return (correctPos, correctNotPos);
+    * Time: O(4 * 4);
+   3234
+
+Res: 3234
+candidates: 1,2,3,4,5,6
+1111 -> (0,0);
+2222 -> (1,0); a 2 digit in correctPos
+3333 -> (2,0); two 3 digits in correctPos
+4444 -> (1,0); a 4 in correctPos.
+eliminates 1,5,6;
+
+candidates: 2(1), 3(2), 4(1);
+0222 -> (1,0);
+0333 -> (1,0); 3 has 2counts - 1 = 1; found 1st digit = 3; 3(2)->3(1)
+
+candidates: 2(1), 3(1), 4(1);
+0022 -> (0,0); 2(1) -> 0; found 2nd digit; 2(1)->2(0);
+
+candidates: 3(1), 4(1);
+0003 -> (0,0); 3(1)-> 0; found 3rd; 3(1)->0;
+
+candidates: 4(1); leftover = 1 = (1) count of 4; 4th digit DONE
    */
-  
+  public String guessNumber2() {
+    List<Integer> res = new ArrayList<>();
+    // 1->6; index0 not counted. Count their appearances.
+    int[] candCount = new int[7];
+    Arrays.fill(candCount, -1);
+    int leftover = 4;
+    // cur pos to fill, 1->4; 0 means first iter eliminates round. could be 4 left.
+    int pos = 0;
+
+    while (leftover > 0 && pos <= 4) {
+      // founded candidates
+      int founded = 0;
+      for (int cand = 1; cand <= 6; cand++) {
+        // skip, eliminated cands
+        if (candCount[cand] == 0) {
+          continue;
+        }
+        // if founded cands == leftover, means rest can be eliminated
+        if (founded == leftover && res.size() > 0) {
+          candCount[cand] = 0;
+          continue;
+        }
+        // generate masks guess, 2222, 3333,
+        String guess = filledNumber(cand, pos);
+        int[] corrects = guessServer2(guess);
+        // check its pos corrects == leftover, found whole number.
+        if (corrects[0] == leftover) {
+          while (leftover > 0) {
+            res.add(cand);
+            candCount[cand]--;
+            leftover--;
+            pos++;
+          }
+          break;
+        } else if (candCount[cand] > corrects[0]) {
+          // curPos is this cand.
+          res.add(cand);
+          leftover--;
+          candCount[cand] = corrects[0];
+          founded += candCount[cand];
+          // found the pos, move to next pos.
+          break;
+        }
+        // update count
+        candCount[cand] = corrects[0];
+        founded += candCount[cand];
+      }
+      pos++;
+    }
+
+    return IntsToString(res);
+  }
+
+  private int[] guessServer2(String guess) {
+    int[] res = new int[2];
+    // counts
+    int[] tarArr = new int[256];
+    for (char c : target.toCharArray()) {
+      tarArr[c]++;
+    }
+    
+    for (int i = 0; i < guess.length(); i++) {
+      // if target have that number
+      if (tarArr[guess.charAt(i)] > 0) {
+        res[1]++;
+        tarArr[guess.charAt(i)]--;
+      }
+      // if matches position
+      if (guess.charAt(i) == target.charAt(i)) {
+        res[0]++;
+        res[1]--;
+      }
+    }
+    return res;
+  }
+
+  private String filledNumber(int digit, int pos) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < pos; i++) {
+      sb.append(0);
+    }
+    for (int i = pos; i < 4; i++) {
+      sb.append(digit);
+    }
+    return sb.toString();
+  }
+
 	
 	public static void main(String[] args) {
-		GuessNumber obj = new GuessNumber("3113");
+		GuessNumber obj = new GuessNumber("3526");
 		String res = obj.guessNumber();
-		System.out.println(res);
+		System.out.println("res1 " + res);
+
+    String res2 = obj.guessNumber2();
+    System.out.println("res2: " + res2);
 	}
 
 }
