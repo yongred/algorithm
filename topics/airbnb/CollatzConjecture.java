@@ -74,7 +74,7 @@ public class CollatzConjecture {
 		}
 		int max = 0;
 		int[] cache = new int[n + 1];
-		Arrays.fill(cache, -1);
+		// Arrays.fill(cache, -1);
 		// n=1, requires 0 step.
 		cache[1] = 0;
 		// loop from 2 to n;

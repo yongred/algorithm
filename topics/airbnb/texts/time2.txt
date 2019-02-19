@@ -3,3 +3,4 @@ AlienDictionary2
 BankSystem
 BoggleGame
 CheapestFlightsKStops
+CollatzConjecture
