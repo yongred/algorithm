@@ -91,12 +91,12 @@ public class BankSystem {
 		// check outOfRange if startTime is later or = last transaction.
 		List<Timestamp> times = timeLines.get(id);
 		if (times.get(times.size() - 1).before(startTime) ||
-	 			times.get(times.size() - 1).equals(startTime)) {
+	 			times.get(times.size() - 1).equals(startTime) ||
+	 			times.get(0).after(endTime)) {
 			System.out.println("out of range");
 			return -1;
 		}
 		// check balance diff +amount, -amount from exclusive (start, end] inclusive end;
-		int totalDiff = 0;
 		// find startTime index using binarySearch.
 		int startIndex = searchStart(times, startTime, 0, times.size() - 1);
 		int endIndex = searchEnd(times, endTime, 0, times.size() - 1);
@@ -152,8 +152,8 @@ public class BankSystem {
 				end = mid - 1;
 			}
 		}
-		// no == found.
-		// left > target by this point start=mid+1.
+		// no == found. no exact time = target, return the next available time.
+		// left > target by this point start=mid+1. start is at that point
 		return start;
 	}
 

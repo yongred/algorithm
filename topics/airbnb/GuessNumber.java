@@ -204,7 +204,7 @@ candidates: 4(1); leftover = 1 = (1) count of 4; 4th digit DONE
           continue;
         }
         // if founded cands == leftover, means rest can be eliminated
-        if (founded == leftover && res.size() > 0) {
+        if (founded == leftover) {
           candCount[cand] = 0;
           continue;
         }
@@ -275,7 +275,7 @@ candidates: 4(1); leftover = 1 = (1) count of 4; 4th digit DONE
 
 	
 	public static void main(String[] args) {
-		GuessNumber obj = new GuessNumber("3526");
+		GuessNumber obj = new GuessNumber("2111");
 		String res = obj.guessNumber();
 		System.out.println("res1 " + res);
 

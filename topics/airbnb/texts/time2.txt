@@ -1,15 +1,5 @@
-Crown Board Game
-FileSystem.
-Wiggle Sort II
-Find Median in Large Integer
-IP to CIDR
-Palindrome Pairs
-Implement Queue with Limited Size of Array
-Pour Water.
-Cheapest Flights Within K Stops
-Menu Combination Sum
-Ten Wizards
-List of List (2D List) Iterator
-Sliding Game
-
-35 total.
+AlienDictionary
+AlienDictionary2
+BankSystem
+BoggleGame
+CheapestFlightsKStops
