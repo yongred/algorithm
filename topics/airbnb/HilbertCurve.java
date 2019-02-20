@@ -35,6 +35,22 @@ iter1 iter1
 [4,3]	[2,1]
 [1,2] [3,4]
 
+grid4:
+[2,1] -> [2,3]
+[3,4]    [1,4]
+xs:
+       (3,3)->(0,0) 4-3-1
+     (2,2)->(1,1) 4-2-1
+  (1,1)->(2,2) 4-1-1
+(0,0)->(3,3) 4-0-1
+ys:
+	(1,1)->(0,0) 2-1-1
+(0,0)->(1,1) 2-0-1
+
+goal: (3,1)->(0,0); (2,0)->(1,1)
+(3,1): 2-1-1=0, 4-3-1=0
+(2,0): 2-0-1=1, 4-2-1=1
+
 How to Arrive:
 * Question wants us to count the grids of Hilbert Curve Path to a point;
 * Hilbert Curve Graph Iters: iter1= 2*2; iter2= 4*4; iter3= 8*8 grids;

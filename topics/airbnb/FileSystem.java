@@ -108,7 +108,7 @@ public class FileSystem {
 
 		// follow up watch callback, path's dir parents' callback.
 		String[] parentFiles = dir.split("/");
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();b
 		for (String file : parentFiles) {
 			// /a -> /a/b -> /a/b/c ...
 			if (sb.length() == 0 && file.equals("")) {

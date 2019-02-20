@@ -127,37 +127,34 @@ public class GuessNumber {
 	 * Solution: 
 	 */
 	public String guessNumber() {
-		List<Integer> res = new ArrayList<>();
-    List<Integer> cands = new ArrayList<Integer>() {{
-      add(1);
-      add(2);
-      add(3);
-      add(4);
-      add(5);
-      // insert(6);
-    }};
+    List<Integer> res = new ArrayList<>();
+    List<Integer> cands = new ArrayList<>();
+    for (int i = 1; i < 6; i++) {
+      cands.add(i);
+    }
     
     Iterator<Integer> iter = cands.iterator();
+    
     while (iter.hasNext() && res.size() < 4) {
       int cand = iter.next();
-      int guessedCount = res.size();
-      String guessCand = genNumber(res, cand);
-      int corrects = guessServer(guessCand);
+      int filled = res.size();
+      String guess = genNumber(res, cand);
+      int corrects = guessServer(guess);
       
-      if (corrects == guessedCount) {
+      if (corrects == filled) {
         iter.remove();
-      } else if (corrects > guessedCount) {
-        for (int i = guessedCount; i < corrects; i++) {
+      } else if (corrects > filled) {
+        for (int i = filled; i < corrects; i++) {
           res.add(cand);
         }
         iter.remove();
       }
     }
-    if (res.size() < 4) {
-      for (int i = res.size(); i < 4; i++)
-        res.add(6);
+    
+    while (res.size() < 4) {
+      res.add(6);
     }
-
+    
     return IntsToString(res);
   }
 
@@ -240,6 +237,7 @@ candidates: 4(1); leftover = 1 = (1) count of 4; 4th digit DONE
   }
 
   private int[] guessServer2(String guess) {
+    // [0]= correct pos; [1] corrects - correctPos;
     int[] res = new int[2];
     // counts
     int[] tarArr = new int[256];

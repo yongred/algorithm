@@ -74,7 +74,8 @@ public class FindCaseCombinationsString {
 			char[] curArr = new char[n];
 			for (int j = 0; j < n; j++) {
 				// 2^0, (0L,1U); 2^1 (0L,1L,2U,3U); 2^2 (0L,1L,2L,3L, 4U,5U,6U,7U);
-				// idx0 char Lo or Up is determine by 0th bit, idx1 char is determined by 1st bit.
+				// idx0 char Lo or Up is determine by 0th bit, 
+				// idx1 char is determined by 1st bit.
 				// idx2 char Lo or Up is determine by 2nd bit. 
 				// Conclude: to determine if n comboStr's ith char is Lo or Up, check if n's ith bit is 1 or 0;
 				curArr[j] = isBitSet(i, j) ? Character.toUpperCase(arr[j]) : Character.toLowerCase(arr[j]);

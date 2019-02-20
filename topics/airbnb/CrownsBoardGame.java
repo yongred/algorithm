@@ -72,9 +72,9 @@ public class CrownsBoardGame {
 	 */
 	public int getScore(String[] board) {
 		// crowns [r][c] = # of crowns;
-		List<List<String>> newBoard = convertBoard(board);
-		int rows = newBoard.size();
-		int cols = newBoard.get(0).size();
+		String[][] newBoard = convertBoard(board);
+		int rows = newBoard.length;
+		int cols = newBoard[0].length;
 		// BFS
 		boolean[][] visited = new boolean[rows][cols];
 		int total = 0;
@@ -90,11 +90,11 @@ public class CrownsBoardGame {
 
 	int[][] dirs = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-	public int bfs(List<List<String>> newBoard, int row, int col, boolean[][] visited) {
-		int rows = newBoard.size();
-		int cols = newBoard.get(0).size();
+	public int bfs(String[][] newBoard, int row, int col, boolean[][] visited) {
+		int rows = newBoard.length;
+		int cols = newBoard[0].length;
 
-		Queue<Point> queue = new ArrayDeque<>();
+		Deque<Point> queue = new ArrayDeque<>();
 		queue.add(new Point(row, col));
 		visited[row][col] = true;
 
@@ -103,9 +103,9 @@ public class CrownsBoardGame {
 		while (!queue.isEmpty()) {
 			Point point = queue.poll();
 			// update sizes and crowns
-			String curGrid = newBoard.get(point.x).get(point.y);
+			String curGrid = newBoard[point.x][point.y];
 			char land = curGrid.charAt(0);
-			int crown = curGrid.charAt(1) - '0';
+			int crown = Integer.parseInt(curGrid.substring(1, curGrid.length()));
 			sizes++;
 			crowns += crown;
 			// 4 dirs
@@ -114,7 +114,7 @@ public class CrownsBoardGame {
 				int y = point.y + dirs[i][1];
 				// check boundaries, and if is Ocean;
 				if (x >= 0 && x < rows && y >= 0 && y < cols && !visited[x][y]) {
-					char toLand = newBoard.get(x).get(y).charAt(0);
+					char toLand = newBoard[x][y].charAt(0);
 					if (land == toLand) {
 						queue.add(new Point(x, y));
 						visited[x][y] = true;
@@ -126,13 +126,16 @@ public class CrownsBoardGame {
 		return (sizes * crowns);
 	}
 
-	public List<List<String>> convertBoard(String[] board) {
+	public String[][] convertBoard(String[] board) {
 		int rows = board.length;
-		List<List<String>> res = new ArrayList<>();
+		int cols = board[0].split(" ").length;
+		String[][] res = new String[rows][cols];
 
 		for (int r = 0; r < rows; r++) {
 			String[] row = board[r].split(" ");
-			res.add(Arrays.asList(row));
+			for (int c = 0; c < cols; c++) {
+				res[r][c] = row[c];
+			}
 		}
 		
 		return res;

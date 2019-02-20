@@ -4,3 +4,12 @@ BankSystem
 BoggleGame
 CheapestFlightsKStops
 CollatzConjecture
+ConnectionResponse
+CrownsBoardGame
+DisplayPage
+FileSystem
+FindCaseCombinationsString
+FindingOcean
+FindMedianLargeIntegerFileOfIntegers
+GuessNumber
+HilbertCurve
