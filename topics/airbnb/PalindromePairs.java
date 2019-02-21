@@ -87,7 +87,7 @@ Ex: "cc(cba)", if a word exist as "abc" then they can form "abc|cccba";
 * Instead, we loop chars reversely (add letters reversely);
 * And we assign word's Index in the lastNode to indicate which word it represent.
 * Also, when traversing each letterNode, if (0-> i) isPalindrome, we know if a word == reversed substr/postfix (i + 1 -> len-1), then they can form a palindrome.
-* So, we add curWord's index to curNode's prefixList.
+* So, we add curWord's index to curNode's postfixList.
 * We will add curWord's index to itself's starting Node as well, b/c "abc" itself is == postfix "cba" reversed (abc);
 * Notice: Root is ""; so "" + "aba" can form palindrome. So if any word == ""; it will also be added to Res pair.
 
@@ -99,8 +99,8 @@ Ex: "cc(cba)", if a word exist as "abc" then they can form "abc|cccba";
 * Add pair (curWord's index, TrieNode's index);
 * If Node == null; means no more path to check. Return;
 * After loop all chars in curWord, and curNode != null. Which means curWord is shorter or == to Trie Path. And curWord matches reversedPostfix of atleast 1 word. (curWord as the prefix); curWord + TrieNode word.
-* So we can go through CurNode's prefixList, to see which words can form palindrome with curWord;
-* If prefixList index not == curWord index, not itself. We add pair(curWord's index, prefixList's indexes);
+* So we can go through CurNode's postfixList, to see which words can form palindrome with curWord;
+* If postfixList index not == curWord index, not itself. We add pair(curWord's index, postfixList's indexes);
 * Done;
 * Time: O(N * L^2); N= # of words; L= avg word.len; check palindrome is O(L);
 * Form Trie = T(N * L) * Palindrome check T(L) == O(N * L^2);  Search 1 word takes O(L) time, search N words T(N * L), times the palindrome check T(L); O(N * L^2);
@@ -188,13 +188,13 @@ class PalindromePairs {
     TrieNode[] letters;
     // index in words array. this node is Starting letter of that word.
     int index;
-    // indexes of words that this substr can be a prefix of to form a palindrome.
-    List<Integer> prefixList;
+    // indexes of words that this substr can be a postfix of to form a palindrome.
+    List<Integer> postfixList;
     
     TrieNode() {
       letters = new TrieNode[26];
       index = -1;
-      prefixList = new ArrayList<>();
+      postfixList = new ArrayList<>();
     }
   }
   
@@ -228,17 +228,19 @@ class PalindromePairs {
         // not exist curLetter in path. Create it.
         curNode.letters[letter - 'a'] = new TrieNode();
       }
-      // check if rest of word - curPrefix/postfix == palindrome.
+      // prefix is palin, means reversePost + prefix + post = palin.
       if (isPalindrome(word, 0, i)) {
-        curNode.prefixList.add(index);
+        // this postfix of the word can form a palin w/ reversePost;
+        // ex: aabc reversed (cb)aa + dc = palin. find 'dc'.
+        curNode.postfixList.add(index);
       }
       // go to letter node, continue creation of word. Next letter.
       curNode = curNode.letters[letter - 'a'];
     }
     // finished insert chars in path. 
-    // word itself is a prefix of itself.
+    // word itself is a postfix of itself.
     // "abc" = pre("") post("abc") or pre("abc") post("")
-    curNode.prefixList.add(index);
+    curNode.postfixList.add(index);
     // Assign index indicate which word it represent.
     curNode.index = index;
   }
@@ -256,22 +258,22 @@ class PalindromePairs {
           isPalindrome(word, i, word.length() - 1)) {
         res.add(Arrays.asList(index, curNode.index));
       }
-      // go to next letter.
-      curNode = curNode.letters[letter - 'a'];
-      // no more path to check.
-      if (curNode == null) {
+      // no more path to check
+      if (curNode.letters[letter - 'a'] == null) {
         return;
       }
+      // go to next letter.
+      curNode = curNode.letters[letter - 'a'];
     }
     // word letter finished, curNode is at last letter of word.
     // check for any word that can form a palindrome with this substr.
     // ex: "abc" "cc(cba)"; 
-    for (int wordIndex : curNode.prefixList) {
+    for (int postIndex : curNode.postfixList) {
       // if itself, skip.
-      if (index == wordIndex) {
+      if (index == postIndex) {
         continue;
       }
-      res.add(Arrays.asList(index, wordIndex));
+      res.add(Arrays.asList(index, postIndex));
     }
   }
   

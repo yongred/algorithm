@@ -151,6 +151,7 @@ public class IpToCIDR {
 			ips[i] = Long.valueOf(ipStrs[i]);
 		}
 		// concate into 1 num of 32 bits decimal representation.
+    // 11111111.00000000.00000000.00000111 = 255.0.0.7
 		return (ips[0] << 24) + (ips[1] << 16) + (ips[2] << 8) + ips[3];
 	}
 	

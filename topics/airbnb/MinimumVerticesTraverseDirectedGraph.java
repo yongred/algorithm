@@ -97,70 +97,73 @@ public class MinimumVerticesTraverseDirectedGraph {
 	* Space: O(V + E);
 	*/
 	public List<Integer> getMin(int[][] edges, int n) {
-		// topologiacal sort, build a graph with indegrees
-		Map<Integer, Set<Integer>> graph = new HashMap<>();
-		buildGraph(edges, n, graph);
-		helper(graph, n);
-		return new ArrayList<>(resSet);
-	}
-
-	Map<Integer, Integer> indegrees = new HashMap<>();
-	Set<Integer> visited = new HashSet<>();
-	Set<Integer> resSet = new HashSet<>();
-
-	public void helper(Map<Integer, Set<Integer>> graph, int n) {
-		// 0 indegrees
-		for (int node : indegrees.keySet()) {
-			if (indegrees.get(node) == 0) {
-				// add 0 indegrees to resSet; B/c they can leads to most points.
-				resSet.add(node);
-				dfs(graph, node, new HashSet<>());
-			}
-		}
-		// traversed all nodes connected to 0 indegrees.
-		// If there are unvisited, they are cycles with no outside node points to them.
-		// Ex: 2<->3; 2->3->4->2; Visit them
-		for (int node = 0; node < n; node++) {
-			if (visited.contains(node)) {
-				continue;
-			}
-			// add one of the node in cur cycle.
-			resSet.add(node);
-			dfs(graph, node, new HashSet<>());
-		}
-	}
-
-	public void dfs(Map<Integer, Set<Integer>> graph, int node, Set<Integer> curPathVisited) {
-		if (curPathVisited.contains(node)) {
-			// cycle
-			return;
-		}
-		if (visited.contains(node)) {
-			return;
-		}
-		visited.add(node);
-		curPathVisited.add(node);
-		// go adj paths
-		for (int child : graph.get(node)) {
-			dfs(graph, child, curPathVisited);
-		}
-		curPathVisited.remove(node);
-	}
-
-	public void buildGraph(int[][] edges, int n, Map<Integer, Set<Integer>> graph) {
-		for (int i = 0; i < n; i++) {
-			graph.putIfAbsent(i, new HashSet<>());
-			// init count 0;
-			indegrees.putIfAbsent(i, 0);
-		}
-		// connect edges
-		for (int[] edge : edges) {
-			graph.get(edge[0]).add(edge[1]);
-			// +1 indegree for the child.
-			indegrees.put(edge[1], indegrees.get(edge[1]) + 1);
-			System.out.println(edge[1] + " indegrees " + indegrees.get(edge[1]));
-		}
-	}
+		// topological sort, build graph with indegrees.
+    Map<Integer, Set<Integer>> graph = new HashMap<>();
+    indegrees = new int[n];
+    buildGraph(graph, edges, n);
+    helper(graph, n);
+    return res;
+  }
+  
+  int[] indegrees;
+  Set<Integer> visited = new HashSet<>();
+  List<Integer> res = new ArrayList<>();
+  
+  public void helper(Map<Integer, Set<Integer>> graph, int n) {
+    // 0 indegrees
+    for (int node = 0; node < n; node++) {
+      // add 0 indegrees to resSet; B/c they can leads to most points.
+      if (indegrees[node] == 0) {
+        res.add(node);
+        dfs(graph, node, new HashSet<>());
+      }
+    }
+    // no cycle if able to visit all.
+    if (visited.size() == n) {
+      return;
+    }
+    // traversed all nodes connected to 0 indegrees.
+    // If there are unvisited, they are cycles with no outside node points to them.
+    // Ex: 2<->3; 2->3->4->2; Visit them
+    for (int node = 0; node < n; node++) {
+      if (visited.contains(node)) {
+        continue;
+      }
+      res.add(node);
+      dfs(graph, node, new HashSet<>());
+    }
+  }
+  
+  public void dfs(Map<Integer, Set<Integer>> graph, int node,
+      Set<Integer> visiting) {
+    // cycle
+    if (visiting.contains(node)) {
+      return;
+    }
+    // finish with all this adj
+    if (visited.contains(node)) {
+      return;
+    }
+    visiting.add(node);
+    // go down adj paths.
+    for (int adj : graph.get(node)) {
+      dfs(graph, adj, visiting);
+    }
+    visiting.remove(node);
+    visited.add(node);
+  }
+  
+  public void buildGraph(Map<Integer, Set<Integer>> graph,
+      int[][] edges, int n) {
+    for (int i = 0; i < n; i++) {
+      graph.put(i, new HashSet<>());
+    }
+    
+    for (int[] edge : edges) {
+      graph.get(edge[0]).add(edge[1]);
+      indegrees[edge[1]]++;
+    }
+  }
 
 
 	public static void main(String[] args) {

@@ -30,7 +30,7 @@ Solution: Follow up;
 Ex: [[1, 3], [6, 7]], [[2, 4]], [[2, 3], [9, 12]]  K=2;
 Points: 1s, 2s, 2s, 3e, 3e, 4e, 6s, 7e, 9s, 12e;
 	busy:  1, 2, 3, 2, 1, 0, 1, 0, 1, 0
-nonBusy: 2, 1, 0, 1, 2, 3, 2, 3, 2, 3
+	free:  2, 1, 0, 1, 2, 3, 2, 3, 2, 3
 Start 1: (2=2), 2 free can open interval, check next for same startTime, 2s != 1s, open new Start interval [1, ]
 Start 2: (1< 2) open interval [1, ] closed with 2 = [1,2]
 Start 2: (0< 2) no open interval;
@@ -77,7 +77,7 @@ public class MeetingTime {
 		}
 	}
 
-	class Point implements Comparable<Point> {
+	class Point {
 		int time;
 		boolean isStart;
 
@@ -86,16 +86,6 @@ public class MeetingTime {
 			this.isStart = isStart;
 		}
 
-		@Override
-		public int compareTo(Point point) {
-			// ASC, -# smaller in front.
-			if (this.time != point.time) {
-				return this.time - point.time;
-			} else {
-				// If this is start time, place in front.
-				return (this.isStart) ? -1 : 1;
-			}
-		}
 	}
 	
 	/**
@@ -104,42 +94,45 @@ public class MeetingTime {
 	 * Space: O(n)
 	 */ 
 	public List<Interval> findIntervals(List<List<Interval>> employees) {
-		List<Interval> res = new ArrayList<>();
-		List<Point> points = new ArrayList<>();
-		// loop intervals, make them into points.
-		for (List<Interval> intervalList : employees) {
-			// get start and end time.
-			for (Interval interval : intervalList) {
-				points.add(new Point(interval.start, true));
-				points.add(new Point(interval.end, false));
-			}
-		}
-		// Sort the points
-		Collections.sort(points);
-		// find intervals
-		// count how many busy start times, cancel out start w/ end time.
-		int busyEmployees = 0;
-		// find a avaliable time for new interval.
-		int avaliableStart = -1;
-		for (int i = 0; i < points.size(); i++) {
-			if (points.get(i).isStart) {
-				busyEmployees++;
-				// Not first start time, but 0 busy before this. We found a available time interval.
-				if (i > 0 && busyEmployees == 1) {
-					res.add(new Interval(avaliableStart, points.get(i).time));
-					avaliableStart = -1;
-				}
-			} else {
-				// end time
-				busyEmployees--;
-				// Not last end time, no more busy, finished/cancel out all start time.
-				if (i < points.size() - 1 && busyEmployees == 0) {
-					avaliableStart = points.get(i).time;
-				}
-			}
-		}
-		return res;
-	}
+    List<Interval> res = new ArrayList<>();
+    List<Point> points = new ArrayList<>();
+    // [ [[1, 3], [6, 7]], [[2, 4]], [[2, 3], [9, 12]] ]
+    for (List<Interval> employee : employees) {
+      for (Interval inv : employee) {
+        points.add(new Point(inv.start, true));
+        points.add(new Point(inv.end, false));
+      }
+    }
+    // Sort
+    Collections.sort(points, (a, b) -> {
+      return (a.time == b.time) ? (a.isStart ? -1 : 1) : a.time - b.time;
+    });
+    // total employees
+    int n = employees.size();
+    int frees = n; // free employees at this time.
+    int availableStart = -1; // startTime of all free.
+    
+    for (int i = 0; i < points.size(); i++) {
+      Point cur = points.get(i);
+      if (cur.isStart) {
+        // 1 more employee become busy. Start time.
+        // check available, if endTime -> curStart is all free.
+        if (availableStart != -1 && frees == n) {
+          res.add(new Interval(availableStart, cur.time));
+        }
+        frees--;
+      } else {
+        // 1 more employee free. End time.
+        // if all free after this employee.
+        if (frees + 1 >= n) {
+          availableStart = cur.time;
+        }
+        frees++;
+      }
+    }
+    
+    return res;
+  }
 
 	/**
 	 * Solution: PriorityQueue.
@@ -161,6 +154,7 @@ public class MeetingTime {
 			// prev endtime < cur startTime, found interval
 			if (prev.end < pq.peek().start) {
 				res.add(new Interval(prev.end, pq.peek().start));
+				// > end becomes next prev.
 				prev = pq.poll();
 			} else {
 				// whoever has the later endtime we need to find out when is he free
@@ -173,63 +167,72 @@ public class MeetingTime {
 	}
 
 	/**
-	 * Follow up: Intervals for atleast k employee is free;
-	 * Solution: free >= k; busy <= n-k;
-	 */
-	public List<Interval> findIntervalsAtleastK(List<List<Interval>> employees, int k) {
-		List<Interval> res = new ArrayList<>();
-		List<Point> points = new ArrayList<>();
-		// loop intervals, make them into points.
-		for (List<Interval> intervalList : employees) {
-			// get start and end time.
-			for (Interval interval : intervalList) {
-				points.add(new Point(interval.start, true));
-				points.add(new Point(interval.end, false));
-			}
-		}
-		// Sort the points
-		Collections.sort(points);
-		// find intervals
-		// count how many busy start times, cancel out start w/ end time.
-		int busyEmployees = 0;
-		// find a avaliable time for new interval.
-		int avaliableStart = -1;
-		for (int i = 0; i < points.size(); i++) {
-			if (points.get(i).isStart) {
-				busyEmployees++;
-				// check if >= k employees is free; meaning busy <= size-k;
-				// startInterval is set, means have atleast k free. 
-				// And this 1 busyEmployee just start meeting. Free = k-1, end of cur interval
-				if (avaliableStart != -1 && busyEmployees == employees.size() - k + 1) {
-					res.add(new Interval(avaliableStart, points.get(i).time));
-					// reset avaliableStart for next interval
-					avaliableStart = -1;
-				} else if (avaliableStart == -1 && busyEmployees <= employees.size() - k) {
-					// check if same start time on next point, meaning another employee taking a same start time meeting.
-					if (i + 1 < points.size() && points.get(i + 1).isStart &&
-							points.get(i + 1).time == points.get(i).time) {
-						continue;
-					} else {
-						// next is not a same start time. We assign cur point as new intervalStart
-						avaliableStart = points.get(i).time;
-					}
-				}
-			} else {
-				// end time
-				busyEmployees--;
-				// check for new available start
-				if (avaliableStart == -1 && busyEmployees == employees.size() - k) {
-					// no new interval started yet, and this employee is just free from a meeting, free = k;
-					avaliableStart = points.get(i).time;
-				} else if (i == points.size() - 1 && avaliableStart != -1) {
-					// if this is last point endtime. And a intervalStart has not yet closed.
-					// add last endtime as avaliable point
-					res.add(new Interval(avaliableStart, points.get(i).time));
-				}
-			}
-		}
-		return res;
-	}
+   * Follow up: Intervals for atleast k employee is free;
+   * Solution: free >= k; busy <= n-k;
+   */
+  public List<Interval> findIntervalsAtleastK(List<List<Interval>> employees,
+      int k) {
+    List<Interval> res = new ArrayList<>();
+    List<Point> points = new ArrayList<>();
+    // loop intervals, make them into points.
+    for (List<Interval> employee : employees) {
+      // get start and end time.
+      for (Interval inv : employee) {
+        points.add(new Point(inv.start, true));
+        points.add(new Point(inv.end, false));
+      }
+    }
+    // Sort the points
+    Collections.sort(points, (a, b) -> {
+      return (a.time == b.time) ? (a.isStart ? -1 : 1) : a.time - b.time;
+    });
+    
+    int n = employees.size();
+    int frees = n;
+    int availableStart = -1;
+    // [1, 3], [2, 4], [2, 3], [6, 7], [9, 12]
+    // 1s, 2s, 2s, 3e, 3e, 4e, 6s, 7e, 9s, 12e;
+    for (int i = 0; i < points.size(); i++) {
+      Point cur = points.get(i);
+      if (cur.isStart) {
+        // start, 1 less free.
+        // check if k employees is free; 
+        // free-1 would close the interval of k frees.
+        if (availableStart != -1 && frees == k) {
+          res.add(new Interval(availableStart, cur.time));
+          availableStart = -1;
+        } else if (availableStart == -1 && frees - 1 >= k) {
+          // check if same start time on next point, 
+          // ex: [[1, 3], [6, 7]], [[2, 4]], [[2, 3], [9, 12]] k=2;
+          // 1->2 free=2; but if change [2,3]->[1,3] free=1;
+          // So we have to check if next start == curTime. inorder to open
+          if (i + 1 < points.size() && points.get(i + 1).isStart &&
+             cur.time == points.get(i + 1).time) {
+            continue;
+          }
+          // next is not a startTime == cur.time; Open a availableStart.
+          availableStart = cur.time;
+        }
+        frees--;
+      } else {
+        // end, free+1
+        // check if no availableStart opened, and frees+1 >= k
+        if (availableStart == -1 && frees + 1 >= k) {
+          availableStart = cur.time;
+        } else if (i == points.size() - 1 && availableStart != -1) {
+          // if this is last point endtime. And a intervalStart has not yet closed.
+          // add last endtime as end of avaliable point
+          // ex: [1,2] [3,4] [5,6] k=2 n=3; 1->6 all have atleast 2 free;
+          // 1s 2e 3s 4e 5s 6e; free=3-1=2, open [1, ]; not closed until 6;
+          res.add(new Interval(availableStart, cur.time));
+        }
+        frees++;
+      }
+      
+    }
+    
+    return res;
+  }
 
 
 	public static void main(String[] args) {

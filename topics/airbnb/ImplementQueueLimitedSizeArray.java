@@ -5,7 +5,7 @@ Implement a queue with a number of arrays, in which each array has fixed size.
 */
 
 /**
-Solution 1: Use LinkedList, Create a Node class with int[fixedSize], keep a firstIndex
+Solution 1: Use LinkedList, Create a Node class with int[fixedSize], keep a frontIndex
 How to Arrive:
 * Question ask for fixedSize arrays for a queue. So we want to populate these arrays 1 by 1;
 * LinkedList/Deque is good for implementing a Queue, add to Last, poll from First.
@@ -15,13 +15,13 @@ How to Arrive:
 	* Check if lastNode is fully filled, if yes, create a new ListNode with int[fixedSize]; And add elm to it.
 	* For ListNode:
 		* create an Add function, check if the elmsSize >= fixedSize. If not add array[size] = elm;
-		* If FirstIndex = -1, means first elm, FirstIndex = 0;
+		* If FirstIndex = -1, means front elm, FirstIndex = 0;
 		* size++, 1 more elm.
 * Remove: O(1)
-	* We elm from the first Node in linkedList.
-	* If firstNode is empty after remove, linkedList removeFirst();
+	* We elm from the front Node in linkedList.
+	* If frontNode is empty after remove, linkedList removeFirst();
 	* For ListNode:
-		* RemoveFirst function, set array[firstIndex] = -1/null. firstIndex += 1, go to next elm (as the first);
+		* RemoveFirst function, set array[frontIndex] = -1/null. frontIndex += 1, go to next elm (as the front);
 		* size--, 1 less elm;
 * 
 */
@@ -32,8 +32,8 @@ import java.util.*;
 public class ImplementQueueLimitedSizeArray {
 
 	class ListNode {
-		// index of first added elm, Poll from. FIFO.
-		int first;
+		// index of front added elm, Poll from. FIFO.
+		int front;
 		// current elms count
 		int size;
 		int[] block;
@@ -42,7 +42,7 @@ public class ImplementQueueLimitedSizeArray {
 			block = new int[fixedSize];
 			// use -1 as no elm
 			Arrays.fill(block, -1);
-			first = -1;
+			front = -1;
 			size = 0;
 		}
 
@@ -53,15 +53,15 @@ public class ImplementQueueLimitedSizeArray {
 			}
 			// add next elm in next index, which is size. increment size
 			block[size++] = val;
-			// if first elm, firstIndex = 0;
-			first = (size == 1) ? 0 : first;
+			// if front elm, frontIndex = 0;
+			front = (size == 1) ? 0 : front;
 		}
 
 		public int getFirst() {
 			if (size == 0) {
 				return -1;
 			} else {
-				return block[first];
+				return block[front];
 			}
 		}
 
@@ -70,9 +70,9 @@ public class ImplementQueueLimitedSizeArray {
 				return -1;
 			}
 			// not empty
-			int elm = block[first];
-			// remove from the beginning, first = next
-			block[first++] = -1;
+			int elm = block[front];
+			// remove from the beginning, front = next
+			block[front++] = -1;
 			size--;
 			return elm;
 		}
@@ -114,18 +114,18 @@ public class ImplementQueueLimitedSizeArray {
 		}
 
 		public int poll() {
-			// poll first/front
+			// poll front/front
 			// check isEmpty
 			if (isEmpty()) {
 				return -1;
 			}
 			// not empty
-			ListNode firstNode = list.getFirst();
+			ListNode frontNode = list.getFirst();
 			// remove and get 1st elm in node's array
-			int elm = firstNode.removeFirst();
+			int elm = frontNode.removeFirst();
 			// check no elm left in node
-			if (firstNode.size <= 0) {
-				// remove firstNode
+			if (frontNode.size <= 0) {
+				// remove frontNode
 				list.removeFirst();
 			}
 			// decrement size
@@ -134,13 +134,13 @@ public class ImplementQueueLimitedSizeArray {
 		}
 
 		public int peek() {
-			// peek first/front
+			// peek front
 			if (isEmpty()) {
 				return -1;
 			}
 			// not empty
-			ListNode firstNode = list.getFirst();
-			int elm = firstNode.getFirst();
+			ListNode frontNode = list.getFirst();
+			int elm = frontNode.getFirst();
 			return elm;
 		}
 	}
