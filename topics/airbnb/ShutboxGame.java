@@ -134,10 +134,9 @@ public class ShutboxGame {
 			// System.out.println("Sum " + sum);
 			// System.out.println(Arrays.toString(choosed));
 			// flip the choosen
-			for (int i = 0; i < choosed.length; i++) {
-				choices[choosed[i]] = false;
-				size--;
-			}
+			choices[choosed[0]] = false;
+    	choices[choosed[1]] = false;
+    	size -= 2;
 		}
 		// check for win
 		if (size == 0) {

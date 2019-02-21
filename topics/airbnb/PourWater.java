@@ -329,8 +329,8 @@ public class PourWater {
 
   public static void main(String[] args) {
     int[] heights = new int[] {0,1,1,2,1,2,0};
-    int drops = 5;
-    int loc = 3;
+    int drops = 8;
+    int loc = 4;
     pourWater(heights, drops, loc);
     pourWaterNoWalls(heights, drops, loc);
   }

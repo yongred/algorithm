@@ -22,3 +22,8 @@ MeetingTime
 MenuCombinationSum
 MinimumVerticesTraverseDirectedGraph
 NumberIntersectedRectangles
+PalindromePairs
+PourWater
+PyramidTransitionMatrix
+RegularExpression
+RoundPrices
