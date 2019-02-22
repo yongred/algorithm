@@ -27,3 +27,7 @@ PourWater
 PyramidTransitionMatrix
 RegularExpression
 RoundPrices
+ShutboxGame
+TenWizards
+SkiingScore
+SlidingGame

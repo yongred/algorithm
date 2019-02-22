@@ -141,7 +141,7 @@ public class TenWizards {
 	public static void main(String[] args) {
 		TenWizards obj = new TenWizards();
 		List<List<Integer>> wizards = new ArrayList<>();
-		int[][] arr = new int[][] {{1, 4}, {2}, {3, 4}, {4}, {1}}; 
+		int[][] arr = new int[][] {{1, 4}, {2}, {3, 4}, {}, {1}}; 
 		int src = 0;
 		int dst = 4;
 		for (int i = 0; i < arr.length; i++) {

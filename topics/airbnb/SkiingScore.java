@@ -70,20 +70,21 @@ public class SkiingScore {
 			rewards.put(placeReward[0], Integer.valueOf(placeReward[1]));
 		}
 		// prioritize by path Score. Always choosing the higher score first.
-		Queue<Point> pq = new PriorityQueue<>((a, b) -> {
-			// Score DESC.
-			return b.score - a.score;
-		});
+		Queue<Point> pq = new LinkedList<>();
 		// Starting point, reward 0;
 		pq.add(new Point("start", 0));
 		Point path = null;
+		int max = Integer.MIN_VALUE;
 		// BFS
 		while (!pq.isEmpty()) {
 			Point point = pq.poll();
 			// check if reached end;
 			if (point.place.equals("END")) {
-				path = point;
-				break;
+				if (point.score > max) {
+					path = point;
+					max = point.score;
+				}
+				continue;
 			}
 			// adj
 			Map<String, Integer> toPlaceCosts = graph.get(point.place);
@@ -127,11 +128,11 @@ public class SkiingScore {
 	public static void main(String[] args) {
 		SkiingScore obj = new SkiingScore();
 		String[][] travel = {
-			{"start","3","A"},{"A","4","B"},{"B","4","END"},
-			{"start","1","C"},{"C","3","A"},{"C","1","END"}
+			{"start","3","A"},{"A","3","B"},{"B","5","END"},
+			{"start","2","C"},/*{"C","3","A"},*/{"C","4","END"}
 		};
 		String[][] points = {
-			{"A","5"},{"B","6"},{"C","4"},{"END","3"}
+			{"A","6"},{"B","6"},{"C","6"},{"END","8"}
 		};
 
 		int res = obj.getScore(travel, points);
