@@ -111,6 +111,10 @@ public class TextJustification2 {
 			k = 0;
 			// words len w/o spaces.
 			int len = 0;
+			// if a word > width limit; error.
+      if (words[i + k].length() > maxWidth) {
+        return "";
+      }
 			while (i + k < words.length && len + words[i + k].length() + k <= maxWidth) {
 				len += words[i + k].length();
 				k++;
@@ -120,16 +124,15 @@ public class TextJustification2 {
 			// fill words in curLine. And fill right with spaces until maxWidth reached.
 			for (int j = i; j <= i + k - 1; j++) {
 				sb.append(words[j]);
-				if (j != i + k - 1) {
-					sb.append(" ");
-					spaces--;
-				} else {
-					// last word's spaces
-					while (spaces > 0) {
-						sb.append(" ");
-						spaces--;
-					}
-				}
+        if (j == i + k - 1) {
+          while (spaces > 0) {
+            sb.append(" ");
+            spaces--;
+          }
+          break;
+        }
+        sb.append(" ");
+        spaces--;
 			}
 			// add line end, except for last line.
 			if (i + k < words.length) {
@@ -159,15 +162,14 @@ public class TextJustification2 {
 			return;
 		}
 		// loop sentence, break when each to maxWidth.
-		int len = 0;
 		// split substr at width
 		for (int i = 0; i < sentence.length(); i += (maxWidth - 1)) {
 			// if not last line.
-			if (i +  maxWidth - 1 < sentence.length()) {
+			if (i + maxWidth - 1 < sentence.length()) {
+				// ex: k=5; 0->3 abcd; abcd + '-'= "abcd-"";
 				String line = sentence.substring(i, i + maxWidth - 1);
 				// add char '-' 
-				line += "-";
-				res.add(line);
+				res.add(line + "-");
 			} else {
 				String line = sentence.substring(i, sentence.length());
 				StringBuilder sb = new StringBuilder(line);
@@ -184,7 +186,7 @@ public class TextJustification2 {
    	String[] strs = new String[] {"first word", "my second sentence", "now it's third"};
    	justifyMaxStrLen(strs);
    	System.out.println("followup 1: -----------");
-   	justifyMaxWidth(strs, 15);
+   	justifyMaxWidth(strs, 8);
    	System.out.println("followup 2: -----------");
    	justifyMaxWidthBreak(strs, 5);
 	}
