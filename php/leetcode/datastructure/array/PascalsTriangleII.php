@@ -51,7 +51,8 @@ Ex:
 * Space: O(n);
 */
 
-class PascalsTriangleII {
+class PascalsTriangleII
+{
 
     /**
      * @param Integer $rowIndex

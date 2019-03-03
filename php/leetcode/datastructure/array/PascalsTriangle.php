@@ -38,7 +38,8 @@ Solution: Dynamic Programming, use prevRow's res to get curRow.
 * Space: O(n^2)
 */
 
-class PascalsTriangle {
+class PascalsTriangle
+{
 
     /**
      * @param Integer $numRows

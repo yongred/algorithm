@@ -71,6 +71,11 @@ Done, total=1 > 0; solution start=3;
 
 class GasStation {
 
+  /**
+   * Solution: prefixSum, reset when sum == -#;
+   * Time: O(n);
+   * Space: O(1);
+   */
   public int canCompleteCircuit(int[] gas, int[] cost) {
     int total = 0;
     int start = 0;

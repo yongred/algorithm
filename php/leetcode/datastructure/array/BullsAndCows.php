@@ -52,7 +52,8 @@ Done.
 * Space: O(1)
 */
 
-class BullsAndCows {
+class BullsAndCows
+{
 
     /**
      * @param String $secret

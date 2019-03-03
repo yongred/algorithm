@@ -50,7 +50,8 @@ Ex: [2,2,1,1,2]; #of 2 = 3; #of !2 = 2;  3-2= 1;
 
 */
 
-class MajorityElement {
+class MajorityElement
+{
 
     /**
      * @param Integer[] $nums

@@ -42,7 +42,8 @@ Ex3:
 
 */
 
-class FirstMissingPositive {
+class FirstMissingPositive
+{
 
     /**
      * @param Integer[] $nums
