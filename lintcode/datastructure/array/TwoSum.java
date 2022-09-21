@@ -55,7 +55,7 @@ public class TwoSum {
      * @return: [index1, index2] (index1 < index2)
      * Solution: using 2 pointers solution.
      * Sort the array first.
-     * With 2 approach indexes approach from opposite sites.
+     * With 2 indexes approach from opposite sites.
      * check numsSorted[left] + numsSorted[right] is > < = to target.
      *      if sum > target, right--; to decrease sumVal
      *      if sum < target, left++; to increase sumVal

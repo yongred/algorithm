@@ -93,45 +93,45 @@ public class KSum {
 	 * @return: An integer
 	 */
 	public static int kSum(int[] A, int k, int target) {
-    if (A == null || A.length < k || k <= 0) {
-      return 0;
-    }
-    // table for choose k elms from n choices, how many combination == target.
-    // Records all posibility for choosing 1->k elms in A[1]->A[n-1] elms, 
-    // Count any values <= target 
-    int [][][] dp = new int[k + 1][A.length + 1][target + 1];
-    
-    // Fill the k=1 posibilities first. Use it for further k=2,3..k.
-    for (int nInd = 1; nInd <= A.length; nInd++) {
-      // this row is only the posibilities for cur value and the prev values.
-      for (int tInd = nInd; tInd > 0; tInd--) {
-        // any num in arr <= target, count appearance 1.
-        if (A[tInd - 1] <= target) {
-          dp[1][nInd][A[tInd - 1]] = 1;
+        if (A == null || A.length < k || k <= 0) {
+          return 0;
         }
-      }
-    }
-    
-    // Fill the whole table starting k=2;
-    for (int kInd = 2; kInd <= k; kInd++) {
-      // 2 nums start from 2nd val, 3 nums start in 3rd val.
-      // including the prev vals.
-      for (int n = kInd; n <= A.length; n++) {
-        // check all combinations add up to <= target. 
-        for (int t = 0; t <= target; t++) {
-          // prev row cnts add to cur cnts. 
-          dp[kInd][n][t] += dp[kInd][n - 1][t];
-          // check \ row. What is on k-1 n-1 vals.
-          // t + A[n-1] means check for a prevNum + curnum <= target.
-          if (t + A[n - 1] <= target) {
-            dp[kInd][n][t + A[n - 1]] += dp[kInd - 1][n - 1][t];
+        // table for choose k elms from n choices, how many combination == target.
+        // Records all posibility for choosing 1->k elms in A[1]->A[n-1] elms,
+        // Count any values <= target
+        int [][][] dp = new int[k + 1][A.length + 1][target + 1];
+
+        // Fill the k=1 posibilities first. Use it for further k=2,3..k.
+        for (int nInd = 1; nInd <= A.length; nInd++) {
+          // this row is only the posibilities for cur value and the prev values.
+          for (int tInd = nInd; tInd > 0; tInd--) {
+            // any num in arr <= target, count appearance 1.
+            if (A[tInd - 1] <= target) {
+              dp[1][nInd][A[tInd - 1]] = 1;
+            }
           }
         }
-      }
+
+        // Fill the whole table starting k=2;
+        for (int kInd = 2; kInd <= k; kInd++) {
+          // 2 nums start from 2nd val, 3 nums start in 3rd val.
+          // including the prev vals.
+          for (int n = kInd; n <= A.length; n++) {
+            // check all combinations add up to <= target.
+            for (int t = 0; t <= target; t++) {
+              // prev row cnts add to cur cnts.
+              dp[kInd][n][t] += dp[kInd][n - 1][t];
+              // check \ row. What is on k-1 n-1 vals.
+              // t + A[n-1] means check for a prevNum + curnum <= target.
+              if (t + A[n - 1] <= target) {
+                dp[kInd][n][t + A[n - 1]] += dp[kInd - 1][n - 1][t];
+              }
+            }
+          }
+        }
+
+        return dp[k][A.length][target];
     }
-    
-    return dp[k][A.length][target];
-  }
 
   /**
    *

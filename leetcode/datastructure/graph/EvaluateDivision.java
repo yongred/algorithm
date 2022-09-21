@@ -20,7 +20,7 @@ The input is always valid. You may assume that evaluating the queries will resul
 */
 
 /**
-Solution: Construct a grah with edge path val by the equations. Then DFS queries.
+Solution: Construct a gragh with edge path val by the equations. Then DFS queries.
 Ex:
 a / b = 2.0;  =>  a->(2)b, b->(0.5)a;
 
